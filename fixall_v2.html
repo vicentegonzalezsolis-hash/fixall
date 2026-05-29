@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Fixall — Simulador v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#1A6BFF;--blue2:#0C44CC;--blue3:rgba(26,107,255,0.12);--blue4:rgba(26,107,255,0.06);
+  --bg:#0B0D14;--s1:#13151F;--s2:#1A1D2B;--s3:#222537;--s4:#2A2E44;
+  --bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);
+  --t1:#ECEEFF;--t2:#7B80A0;--t3:#404460;
+  --green:#00D68F;--g2:rgba(0,214,143,0.12);--g3:rgba(0,214,143,0.06);
+  --amber:#FFB020;--a2:rgba(255,176,32,0.12);
+  --red:#FF4757;--r2:rgba(255,71,87,0.12);
+  --wa:#25D366;--wa2:rgba(37,211,102,0.1);
+  --r:14px;--r2b:10px;--r3:20px;
+  --ff:'Plus Jakarta Sans',sans-serif;
+  --mono:'DM Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-variant-numeric:tabular-nums}
+html,body{height:100%;background:var(--bg);color:var(--t1);font-family:var(--ff)}
+body{display:flex;flex-direction:column;align-items:center;overflow-x:hidden}
+
+/* TOP MODE BAR */
+.modebar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:center;padding:10px;background:rgba(11,13,20,0.95);border-bottom:1px solid var(--bd);backdrop-filter:blur(20px)}
+.modepill{display:flex;background:var(--s2);border:1px solid var(--bd2);border-radius:30px;padding:4px;gap:3px}
+.mpb{font-family:var(--ff);font-size:12px;font-weight:600;padding:7px 20px;border-radius:26px;cursor:pointer;color:var(--t2);background:none;border:none;transition:all .2s;letter-spacing:.02em}
+.mpb.active{background:var(--blue);color:white;box-shadow:0 0 20px rgba(26,107,255,0.35)}
+.mpb.ag.active{background:var(--green);color:#0B1A14}
+
+/* PHONE */
+.phone{width:390px;min-height:760px;max-height:860px;background:var(--s1);border-radius:40px;overflow:hidden;border:1.5px solid var(--bd2);box-shadow:0 40px 100px rgba(0,0,0,0.7);display:flex;flex-direction:column;position:relative;margin-top:58px;margin-bottom:20px}
+.notch{height:10px;background:var(--s1);display:flex;justify-content:center;align-items:flex-end;padding-bottom:2px;flex-shrink:0}
+.nb{width:110px;height:4px;background:var(--bg);border-radius:3px}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 10px;flex-shrink:0}
+.logo{font-size:22px;font-weight:800;letter-spacing:-1px;display:flex;align-items:center}
+.lf{color:var(--blue)}.la{background:var(--blue);color:white;padding:1px 6px 2px;border-radius:5px;margin-left:1px;font-size:20px}
+.tr{display:flex;align-items:center;gap:8px}
+.ibtn{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;position:relative;transition:background .15s}
+.ibtn:hover{background:var(--s3)}
+.ndot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--red);border:1.5px solid var(--s1)}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;cursor:pointer}
+.avb{background:linear-gradient(135deg,#1A6BFF,#0C44CC)}
+.avg{background:linear-gradient(135deg,#00D68F,#009960)}
+
+/* TABS */
+.tabs{display:flex;padding:8px 14px;gap:4px;border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0}
+.tabs::-webkit-scrollbar{display:none}
+.tab{font-family:var(--ff);font-size:12px;font-weight:500;padding:6px 13px;border-radius:var(--r3);cursor:pointer;white-space:nowrap;color:var(--t2);background:transparent;border:none;transition:all .2s}
+.tab.on{background:var(--blue);color:white}
+.tab.gon{background:var(--green);color:#0B1A14}
+.tab:hover:not(.on):not(.gon){background:var(--s3);color:var(--t1)}
+
+/* SCROLL */
+.scroll{flex:1;overflow-y:auto;padding:12px 14px 90px;scroll-behavior:smooth}
+.scroll::-webkit-scrollbar{width:2px}
+.scroll::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+
+/* SCREENS */
+.scr{display:none;flex-direction:column;gap:11px;animation:fup .22s ease}
+.scr.on{display:flex}
+@keyframes fup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM NAV */
+.bnav{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:space-around;padding:10px 4px 18px;background:linear-gradient(to top,var(--s1) 80%,transparent);border-top:1px solid var(--bd)}
+.bn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;padding:5px 12px;border-radius:var(--r2b);background:none;border:none;font-family:var(--ff);letter-spacing:.02em;transition:color .2s}
+.bn.on{color:var(--blue)}.bn.gon{color:var(--green)}
+.bni{font-size:19px;transition:transform .2s}
+.bn.on .bni,.bn.gon .bni{transform:scale(1.15)}
+
+/* COMPONENTS */
+.lbl{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;text-transform:uppercase}
+
+.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.stat{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:13px 10px;text-align:center;cursor:pointer;transition:transform .15s,border-color .2s;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);transition:transform .3s;transform-origin:left}
+.stat:hover{transform:translateY(-2px)}
+.stat:hover::after{transform:scaleX(1)}
+.sb::after{background:var(--blue)}.sg::after{background:var(--green)}.sa::after{background:var(--amber)}
+.sn{font-size:21px;font-weight:800;color:var(--t1);line-height:1}
+.sn.b{color:var(--blue)}.sn.g{color:var(--green)}.sn.r{color:var(--red)}.sn.a{color:var(--amber)}
+.sl{font-size:10px;color:var(--t2);margin-top:4px;font-weight:500}
+
+.card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+
+/* OT CARD — ahora con menú de estado */
+.ot{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:13px 14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;border-left:3px solid transparent}
+.ot:hover{transform:translateX(2px);border-color:var(--bd2)}
+.ot:active{transform:scale(0.99)}
+.ot.prog{border-left-color:var(--blue)}
+.ot.pend{border-left-color:var(--amber)}
+.ot.wait{border-left-color:var(--red)}
+.ot.done{border-left-color:var(--green)}
+.ot-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.ot-pat{font-size:14px;font-weight:700;color:var(--t1);font-family:var(--mono);letter-spacing:.04em}
+.ot-amt{font-size:14px;font-weight:800;color:var(--t1)}
+.ot-desc{font-size:12px;color:var(--t2);margin-bottom:7px;line-height:1.4}
+.ot-bot{display:flex;justify-content:space-between;align-items:center}
+.ot-who{font-size:11px;color:var(--t3)}
+
+/* ESTADO SELECTOR — NUEVA FUNCIÓN 1 */
+.ot-actions{display:flex;gap:5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)}
+.est-btn{font-size:10px;font-weight:700;padding:5px 9px;border-radius:6px;cursor:pointer;font-family:var(--ff);border:1px solid var(--bd2);background:var(--s3);color:var(--t2);transition:all .2s;white-space:nowrap}
+.est-btn:hover{color:var(--t1);border-color:var(--bd2)}
+.est-btn.active-pend{background:var(--a2);border-color:rgba(255,176,32,0.3);color:var(--amber)}
+.est-btn.active-prog{background:var(--blue3);border-color:rgba(26,107,255,0.3);color:var(--blue)}
+.est-btn.active-wait{background:var(--r2);border-color:rgba(255,71,87,0.3);color:var(--red)}
+.est-btn.active-done{background:var(--g2);border-color:rgba(0,214,143,0.3);color:var(--green)}
+.est-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;padding-right:4px;flex-shrink:0}
+
+.bdg{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.bp{background:var(--a2);color:var(--amber)}
+.bpr{background:var(--blue3);color:var(--blue)}
+.bw{background:var(--r2);color:var(--red)}
+.bd2{background:var(--g2);color:var(--green)}
+.bwa{background:var(--wa2);color:var(--wa)}
+
+.alert{border-radius:var(--r2b);padding:10px 12px;display:flex;align-items:flex-start;gap:8px;border:1px solid transparent;cursor:pointer;transition:transform .15s}
+.alert:hover{transform:translateX(2px)}
+.ai{font-size:15px;flex-shrink:0;margin-top:1px}
+.at{font-size:12px;line-height:1.5}
+.at b{font-weight:700}
+.aal{background:var(--a2);border-color:rgba(255,176,32,0.2);color:var(--amber)}
+.are{background:var(--r2);border-color:rgba(255,71,87,0.2);color:var(--red)}
+.abl{background:var(--blue3);border-color:rgba(26,107,255,0.15);color:#7AABFF}
+.agr{background:var(--g2);border-color:rgba(0,214,143,0.2);color:var(--green)}
+.awa{background:var(--wa2);border-color:rgba(37,211,102,0.2);color:var(--wa)}
+
+/* BUTTONS */
+.btn{width:100%;padding:13px;border-radius:var(--r2b);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--ff);border:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;letter-spacing:.02em}
+.btn:active{transform:scale(0.98)}
+.bbl{background:var(--blue);color:white;box-shadow:0 4px 16px rgba(26,107,255,0.3)}
+.bbl:hover{background:var(--blue2)}
+.bgr{background:var(--green);color:#061A0F;box-shadow:0 4px 14px rgba(0,214,143,0.25)}
+.bwa2{background:var(--wa);color:white;box-shadow:0 4px 14px rgba(37,211,102,0.25)}
+.bout{background:transparent;border:1px solid var(--bd2);color:var(--t2)}
+.bout:hover{border-color:var(--blue);color:var(--blue)}
+.bdng{background:transparent;border:1px solid rgba(255,71,87,0.2);color:var(--red)}
+.bamb{background:var(--amber);color:#1A0D00;box-shadow:0 4px 14px rgba(255,176,32,0.25)}
+.bsm{padding:9px 14px;font-size:12px;border-radius:var(--r2b);font-weight:600;cursor:pointer;font-family:var(--ff);border:none;transition:all .2s;display:inline-flex;align-items:center;gap:5px}
+.bsm:active{transform:scale(0.97)}
+
+/* FORM */
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11px;font-weight:600;color:var(--t3);letter-spacing:.05em;text-transform:uppercase}
+.form-input{background:var(--s3);border:1px solid var(--bd);border-radius:var(--r2b);padding:11px 13px;font-size:13px;color:var(--t1);font-family:var(--ff);outline:none;width:100%;transition:border-color .2s}
+.form-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,255,0.1)}
+.form-input::placeholder{color:var(--t3)}
+.form-input.mono{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;font-size:15px;font-weight:700}
+.form-select{background:var(--s3);border:1px solid var(--bd);border-radius:var(--r2b);padding:11px 13px;font-size:13px;color:var(--t1);font-family:var(--ff);outline:none;width:100%;transition:border-color .2s;appearance:none;cursor:pointer}
+.form-select:focus{border-color:var(--blue)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ITEMS LIST */
+.items-list{display:flex;flex-direction:column;gap:6px}
+.item-row{background:var(--s3);border:1px solid var(--bd);border-radius:var(--r2b);padding:10px 12px;display:flex;gap:8px;align-items:flex-start;position:relative}
+.item-del{position:absolute;top:8px;right:8px;background:none;border:none;color:var(--t3);font-size:14px;cursor:pointer;transition:color .2s;padding:0}
+.item-del:hover{color:var(--red)}
+.item-info{flex:1}
+.item-name{font-size:13px;font-weight:600;color:var(--t1)}
+.item-det{font-size:11px;color:var(--t3);margin-top:2px}
+.item-price{font-size:13px;font-weight:700;color:var(--t1);text-align:right;white-space:nowrap}
+.add-row{border:1px dashed var(--bd2);border-radius:var(--r2b);padding:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;transition:all .2s;color:var(--t3);font-size:12px;font-weight:600;background:none}
+.add-row:hover{border-color:var(--blue);color:var(--blue);background:var(--blue4)}
+
+/* SUBTOTALS */
+.subtotal-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:12px}
+.subtotal-row.big{border-top:1px solid var(--bd);padding-top:12px;margin-top:4px}
+.stk{color:var(--t2)}.stv{font-weight:700;color:var(--t1)}
+.stv.blue{color:var(--blue);font-size:15px;font-weight:800}
+
+/* PATENTE */
+.pat-card{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:16px;position:relative;overflow:hidden}
+.pat-card::after{content:'';position:absolute;top:-50px;right:-50px;width:140px;height:140px;background:radial-gradient(circle,rgba(26,107,255,0.08),transparent 70%);pointer-events:none}
+.pat-num{font-size:28px;font-weight:800;color:var(--t1);font-family:var(--mono);letter-spacing:.05em}
+.pat-brand{font-size:12px;color:var(--t2);margin-top:3px}
+.pat-meta{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid var(--bd);padding-top:12px;margin-top:12px}
+.ml{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+.mv{font-size:12px;font-weight:700;color:var(--t1);margin-top:3px;font-family:var(--mono)}
+.kmbdg{background:var(--s3);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;text-align:right}
+.kmn{font-size:16px;font-weight:800;color:var(--t1)}.kml{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.05em}
+
+/* TIMELINE */
+.tl{display:flex;flex-direction:column}
+.tli{display:flex;gap:10px}
+.tls{display:flex;flex-direction:column;align-items:center;width:14px;flex-shrink:0;padding-top:3px}
+.tld{width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;box-shadow:0 0 8px rgba(26,107,255,0.5)}
+.tld.old{background:var(--t3);box-shadow:none}
+.tlv{width:1px;flex:1;background:var(--bd);margin:3px 0}
+.tlc{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:10px 12px;flex:1;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.tlc:hover{border-color:var(--blue);transform:translateX(2px)}
+.tlh{display:flex;justify-content:space-between;margin-bottom:3px}
+.tld2{font-size:10px;color:var(--t3)}.tla{font-size:12px;font-weight:800;color:var(--t1)}
+.tldesc{font-size:12px;color:var(--t2);line-height:1.4;margin-bottom:5px}
+.tltags{display:flex;gap:4px;flex-wrap:wrap}
+.tltag{font-size:10px;background:var(--s3);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;color:var(--t3)}
+.tlwa{font-size:10px;color:var(--wa);margin-top:4px}
+
+/* FOTOS */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.foto{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);overflow:hidden;cursor:pointer;transition:all .2s}
+.foto:hover{border-color:var(--blue);transform:scale(1.02)}
+.foto:active{transform:scale(0.98)}
+.fimg{height:80px;background:linear-gradient(135deg,var(--s3),var(--s2));display:flex;align-items:center;justify-content:center;font-size:28px}
+.fbody{padding:8px 10px}
+.ftit{font-size:11px;font-weight:700;color:var(--t1)}
+.fsub{font-size:10px;color:var(--t3);margin-top:1px;line-height:1.3}
+
+/* INV */
+.inv{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:11px 13px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:all .2s}
+.inv:hover{border-color:var(--bd2);transform:translateX(2px)}
+.iico{width:36px;height:36px;border-radius:10px;background:var(--s3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.iinf{flex:1;min-width:0}
+.iname{font-size:13px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iref{font-size:10px;color:var(--t3);margin-top:1px;font-family:var(--mono)}
+.ir{text-align:right;flex-shrink:0}
+.iqty{font-size:14px;font-weight:800}
+.ipr{font-size:10px;color:var(--t3);margin-top:1px}
+.bw2{width:44px;height:3px;background:var(--s3);border-radius:2px;margin-top:5px;overflow:hidden}
+.bf{height:3px;border-radius:2px;transition:width .5s ease}
+.qg{color:var(--green)}.qa{color:var(--amber)}.qr{color:var(--red)}
+.fg{background:var(--green)}.fa{background:var(--amber)}.fr{background:var(--red)}
+
+/* REPORTS */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kwide{grid-column:1/-1}
+.kpi{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:13px;cursor:pointer;transition:transform .15s}
+.kpi:hover{transform:translateY(-2px)}
+.kl{font-size:10px;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.kv{font-size:20px;font-weight:800;color:var(--t1)}
+.ks{font-size:11px;color:var(--green);margin-top:3px}
+.ks.n{color:var(--t3)}
+.chart{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px}
+.cht{font-size:12px;font-weight:700;color:var(--t1);margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:80px;margin-bottom:8px}
+.bc{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.bb{width:100%;border-radius:5px 5px 0 0;background:var(--s3);transition:all .3s}
+.bb:hover,.bb.hl{background:var(--blue);box-shadow:0 -4px 12px rgba(26,107,255,0.3)}
+.bm{font-size:9px;color:var(--t3)}.bv{font-size:9px;color:var(--t2)}
+.cfoot{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);border-top:1px solid var(--bd);padding-top:8px}
+.rank{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:11px 13px;cursor:pointer;transition:transform .15s}
+.rank:hover{transform:translateX(2px)}
+.rtop{display:flex;justify-content:space-between;margin-bottom:6px}
+.rn{font-size:13px;font-weight:600;color:var(--t1)}.rm{font-size:13px;font-weight:800;color:var(--t1)}
+.rbw{height:3px;background:var(--s3);border-radius:2px;overflow:hidden}
+.rbf{height:3px;border-radius:2px;background:var(--blue);transition:width .6s ease}
+.rbot{display:flex;justify-content:space-between;margin-top:5px}
+.ro{font-size:10px;color:var(--t3)}.rp{font-size:10px;color:var(--t2)}
+
+/* PERIOD */
+.period{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r3);padding:3px;gap:2px}
+.pt{flex:1;font-size:11px;font-weight:600;text-align:center;padding:6px 0;border-radius:18px;cursor:pointer;color:var(--t3);background:none;border:none;font-family:var(--ff);transition:all .2s}
+.pt.on{background:var(--blue);color:white;box-shadow:0 2px 8px rgba(26,107,255,0.3)}
+
+/* AGENDA */
+.agcard{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:13px}
+.agh{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.agd{font-size:14px;font-weight:800;color:var(--t1)}.agc{font-size:11px;color:var(--green);font-weight:700}
+.slots{display:flex;flex-direction:column;gap:5px}
+.slot{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r2b);background:var(--s3);cursor:pointer;transition:all .2s}
+.slot:hover{background:var(--s4)}
+.st{font-size:11px;font-weight:700;color:var(--t2);font-family:var(--mono);width:46px;flex-shrink:0}
+.sc{flex:1}.sn{font-size:12px;font-weight:600;color:var(--t1)}.sd{font-size:10px;color:var(--t3);margin-top:1px}
+.sfree{background:transparent;border:1px dashed var(--bd)}.sfree .sn{color:var(--t3)}
+
+/* VEHICLE */
+.veh{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s}
+.veh:hover{border-color:var(--green);transform:translateY(-2px)}
+.vt{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.vp{font-size:22px;font-weight:800;color:var(--t1);font-family:var(--mono);letter-spacing:.04em}
+.vb{font-size:12px;color:var(--t2);margin-top:2px}
+.vmant{background:var(--g3);border:1px solid rgba(0,214,143,0.15);border-radius:var(--r2b);padding:9px 12px;display:flex;justify-content:space-between;align-items:center}
+.vml{font-size:11px;color:var(--t3)}.vmv{font-size:12px;font-weight:700;color:var(--green)}
+.gbox{background:var(--g2);border:1px solid rgba(0,214,143,0.2);border-radius:var(--r2b);padding:9px 12px;display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+.gl{font-size:11px;color:var(--green)}.gv{font-size:12px;font-weight:700;color:var(--green)}
+
+/* STEPS */
+.steps{display:flex;align-items:center;margin-bottom:14px}
+.step{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.sdot{width:26px;height:26px;border-radius:50%;border:2px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t3);background:var(--s3);z-index:1;transition:all .3s}
+.sdot.done{border-color:var(--green);background:var(--g2);color:var(--green);box-shadow:0 0 12px rgba(0,214,143,0.3)}
+.sdot.act{border-color:var(--blue);background:var(--blue3);color:var(--blue);box-shadow:0 0 12px rgba(26,107,255,0.3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 10px rgba(26,107,255,0.3)}50%{box-shadow:0 0 20px rgba(26,107,255,0.5)}}
+.slbl{font-size:9px;color:var(--t3);text-align:center;max-width:56px;line-height:1.3;font-weight:600}
+.slbl.done{color:var(--green)}.slbl.act{color:var(--blue)}
+.sline{flex:1;height:1px;background:var(--bd);margin-top:-22px;z-index:0;transition:background .3s}
+.sline.done{background:var(--green)}
+
+/* PRESUP */
+.prow2{padding:10px 14px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--bd)}
+.prow2:last-child{border-bottom:none}
+.prl{font-size:13px;color:var(--t1)}.prd{font-size:10px;color:var(--t3);margin-top:2px}
+.prr{text-align:right;flex-shrink:0;margin-left:10px}
+.prc{font-size:10px;color:var(--t3)}.prv{font-size:13px;font-weight:800;color:var(--t1);margin-top:1px}
+
+/* APROBADO BANNER */
+.apbanner{background:linear-gradient(135deg,var(--g2),var(--s2));border:1px solid rgba(0,214,143,0.2);border-radius:var(--r);padding:20px;text-align:center;display:none;animation:fup .3s ease}
+.apbanner.on{display:block}
+.apem{font-size:44px;margin-bottom:10px}
+.aptit{font-size:18px;font-weight:800;color:var(--green);margin-bottom:6px}
+.apdesc{font-size:13px;color:rgba(0,214,143,0.8);line-height:1.5}
+
+/* HISTORIAL cliente */
+.wahist{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:13px;cursor:pointer;transition:all .2s}
+.wahist:hover{border-color:var(--wa);transform:translateY(-1px)}
+.wht{display:flex;justify-content:space-between;margin-bottom:6px}
+.who{font-size:12px;font-weight:700;color:var(--t1)}.whd{font-size:10px;color:var(--t3)}
+.whsum{font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:8px}
+.whbot{display:flex;justify-content:space-between;align-items:center}
+.whm{font-size:10px;color:var(--t3)}.whl{font-size:11px;color:var(--wa);font-weight:600}
+
+.gastobox{background:linear-gradient(135deg,var(--blue3),var(--s2));border:1px solid rgba(26,107,255,0.2);border-radius:var(--r);padding:18px;text-align:center;cursor:pointer;transition:transform .15s}
+.gastobox:hover{transform:translateY(-2px)}
+.gn{font-size:28px;font-weight:800;color:var(--blue)}
+.gl2{font-size:12px;color:var(--t2);margin-top:4px}
+.gsub{font-size:11px;color:var(--t3);margin-top:2px}
+
+.rev{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:12px}
+.revt{display:flex;justify-content:space-between;margin-bottom:5px}
+.revn{font-size:12px;font-weight:700;color:var(--t1)}.revd{font-size:10px;color:var(--t3)}
+.stars{color:var(--amber);font-size:13px;letter-spacing:1px}
+.revtxt{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* TALLER BUSCAR */
+.tcard{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;cursor:pointer;transition:all .2s}
+.tcard:hover{border-color:var(--green);transform:translateY(-2px)}
+.ttop{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.tav{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0}
+.tinf{flex:1}
+.tn{font-size:14px;font-weight:700;color:var(--t1)}
+.ta{font-size:11px;color:var(--t3);margin-top:2px}
+.tr2{font-size:12px;color:var(--amber);margin-top:3px}
+.tspecs{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.tspec{font-size:10px;background:var(--s3);border:1px solid var(--bd);border-radius:4px;padding:2px 7px;color:var(--t3)}
+.tbot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bd);padding-top:10px}
+.tcupos{font-size:12px;color:var(--green);font-weight:700}
+.tdist{font-size:11px;color:var(--t3)}
+
+/* SEARCH */
+.search{position:relative}
+.search input{width:100%;background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:11px 14px 11px 40px;font-size:13px;color:var(--t1);font-family:var(--ff);outline:none;transition:border-color .2s}
+.search input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,107,255,0.1)}
+.search input::placeholder{color:var(--t3)}
+.sic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:15px;pointer-events:none}
+
+/* MODAL */
+.modal{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.85);z-index:100;align-items:flex-end;justify-content:center;backdrop-filter:blur(10px);border-radius:40px}
+.modal.on{display:flex;animation:fup .2s ease}
+.msheet{background:var(--s2);border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;border-top:1px solid var(--bd2);max-height:85%;overflow-y:auto}
+.msheet::-webkit-scrollbar{display:none}
+.mhandle{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:0 auto 16px}
+.mtit{font-size:16px;font-weight:800;color:var(--t1);margin-bottom:4px}
+.msub{font-size:13px;color:var(--t2);margin-bottom:16px;line-height:1.5}
+
+/* TOAST */
+.toast{position:absolute;bottom:85px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s3);border:1px solid var(--bd2);border-radius:var(--r3);padding:10px 18px;font-size:12px;font-weight:600;color:var(--t1);white-space:nowrap;opacity:0;transition:all .25s;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,0.4);pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* DIVIDER */
+.div{height:1px;background:var(--bd);margin:2px 0}
+
+/* SECTION HEADER */
+.sec-h{display:flex;justify-content:space-between;align-items:center}
+.sec-action{font-size:11px;font-weight:600;color:var(--blue);cursor:pointer;background:none;border:none;font-family:var(--ff)}
+.sec-action:hover{opacity:.8}
+
+/* NOTA */
+.nota{background:var(--a2);border:1px solid rgba(255,176,32,0.2);border-radius:var(--r2b);padding:11px 13px}
+.ntt{font-size:11px;font-weight:700;color:var(--amber);margin-bottom:4px}
+.ntx{font-size:12px;color:rgba(255,176,32,0.8);line-height:1.5}
+
+/* ══════════════════════════════════════════════════════
+   FUNCIÓN 2 — FOTO SALIDA: sección en OT lista
+   ══════════════════════════════════════════════════════ */
+.foto-salida-zone{border:1px dashed rgba(0,214,143,0.35);border-radius:var(--r2b);padding:12px;background:var(--g3)}
+.fsal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fsal-lbl{font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.07em}
+.fsal-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.fsal-thumb{height:60px;border-radius:8px;background:var(--s3);border:1px solid rgba(0,214,143,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .2s}
+.fsal-thumb:hover{border-color:var(--green);transform:scale(1.04)}
+.fsal-add{height:60px;border-radius:8px;background:transparent;border:1px dashed rgba(0,214,143,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:rgba(0,214,143,0.6);cursor:pointer;transition:all .2s;flex-direction:column;gap:3px}
+.fsal-add:hover{border-color:var(--green);color:var(--green);background:var(--g3)}
+
+/* ══════════════════════════════════════════════════════
+   FUNCIÓN 3 — BOLETA ELECTRÓNICA
+   ══════════════════════════════════════════════════════ */
+.boleta-card{background:linear-gradient(135deg,var(--s2),var(--s3));border:1px solid rgba(26,107,255,0.25);border-radius:var(--r);overflow:hidden}
+.boleta-header{background:var(--blue3);padding:14px 16px;border-bottom:1px solid rgba(26,107,255,0.2)}
+.boleta-num{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+.boleta-title{font-size:16px;font-weight:800;color:var(--t1)}
+.boleta-body{padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.boleta-row{display:flex;justify-content:space-between;font-size:12px}
+.boleta-k{color:var(--t2)}.boleta-v{font-weight:600;color:var(--t1)}
+.boleta-divider{height:1px;background:var(--bd);margin:4px 0}
+.boleta-total-row{display:flex;justify-content:space-between;align-items:center;padding-top:4px}
+.boleta-total-lbl{font-size:14px;font-weight:800;color:var(--t1)}
+.boleta-total-val{font-size:20px;font-weight:800;color:var(--blue)}
+.boleta-sii{background:rgba(0,214,143,0.08);border:1px solid rgba(0,214,143,0.2);border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:8px;margin:0 16px 14px}
+.boleta-sii-ico{font-size:18px}
+.boleta-sii-txt{font-size:11px;color:var(--green);font-weight:600}
+.boleta-sii-sub{font-size:10px;color:rgba(0,214,143,0.6);margin-top:1px}
+.boleta-folio{font-family:var(--mono);font-size:11px;color:var(--t3);text-align:center;padding:10px 16px;border-top:1px solid var(--bd)}
+
+/* ══════════════════════════════════════════════════════
+   FUNCIÓN 4 — EDITAR PERFIL TALLER
+   ══════════════════════════════════════════════════════ */
+.perfil-preview{background:linear-gradient(135deg,var(--blue3),var(--s2));border:1px solid rgba(26,107,255,0.2);border-radius:var(--r);padding:16px;display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.perfil-av{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:white;flex-shrink:0}
+.perfil-info{flex:1}
+.perfil-name{font-size:16px;font-weight:800;color:var(--t1)}
+.perfil-addr{font-size:11px;color:var(--t2);margin-top:2px}
+.perfil-rating{font-size:11px;color:var(--amber);margin-top:3px}
+.perfil-badge{font-size:9px;background:var(--g2);border:1px solid rgba(0,214,143,0.2);border-radius:4px;padding:2px 7px;color:var(--green);margin-top:5px;display:inline-block}
+.especialidades-grid{display:flex;flex-wrap:wrap;gap:5px}
+.esp-tag{font-size:11px;background:var(--s3);border:1px solid var(--bd);border-radius:6px;padding:5px 10px;color:var(--t2);cursor:pointer;transition:all .2s}
+.esp-tag.on{background:var(--blue3);border-color:rgba(26,107,255,0.3);color:var(--blue)}
+.esp-tag:hover{border-color:var(--bd2)}
+
+/* ══════════════════════════════════════════════════════
+   FUNCIÓN 5 — CREAR VEHÍCULO DESDE TALLER
+   ══════════════════════════════════════════════════════ */
+.veh-taller{background:var(--s2);border:1px solid var(--bd);border-radius:var(--r2b);padding:12px 14px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:all .2s}
+.veh-taller:hover{border-color:var(--bd2);transform:translateX(2px)}
+.veh-taller-pat{font-size:15px;font-weight:800;font-family:var(--mono);color:var(--t1);letter-spacing:.04em}
+.veh-taller-info{flex:1}
+.veh-taller-brand{font-size:11px;color:var(--t2);margin-top:1px}
+.veh-taller-ots{font-size:10px;color:var(--t3);margin-top:2px}
+</style>
+</head>
+<body>
+
+<div class="modebar">
+  <div class="modepill">
+    <button class="mpb active" onclick="setMode('taller',this)">🔧 Taller</button>
+    <button class="mpb ag" onclick="setMode('cliente',this)">👤 Cliente</button>
+  </div>
+</div>
+
+<!-- ══════════ VISTA TALLER ══════════ -->
+<div class="phone" id="ph-taller">
+  <div class="notch"><div class="nb"></div></div>
+  <div class="topbar">
+    <div class="logo"><span class="lf">Fix</span><span class="la">all</span></div>
+    <div class="tr">
+      <div class="ibtn" onclick="toast('ph-taller','🔔 3 notificaciones nuevas')">🔔<div class="ndot"></div></div>
+      <!-- FUNCIÓN 4: avatar abre perfil del taller editable -->
+      <div class="av avb" onclick="showModal('ph-taller','perfil-taller')">VL</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-t">
+    <button class="tab on" onclick="showT('inicio',this)">Inicio</button>
+    <button class="tab" onclick="showT('nueva-ot',this)">+ OT</button>
+    <button class="tab" onclick="showT('agenda',this)">Agenda</button>
+    <button class="tab" onclick="showT('patentes',this)">Patentes</button>
+    <button class="tab" onclick="showT('inventario',this)">Inventario</button>
+    <button class="tab" onclick="showT('reportes',this)">Reportes</button>
+  </div>
+  <div class="scroll" id="scroll-t">
+
+    <!-- INICIO TALLER -->
+    <div class="scr on" id="t-inicio">
+      <div class="stats">
+        <div class="stat sb" onclick="toast('ph-taller','6 vehículos en el taller')"><div class="sn b" id="stat-en-taller">6</div><div class="sl">En taller</div></div>
+        <div class="stat sg" onclick="toast('ph-taller','3 listos para retirar')"><div class="sn g" id="stat-listos">3</div><div class="sl">Listos</div></div>
+        <div class="stat sg" onclick="showT('reportes',document.querySelector('#tabs-t .tab:last-child'))"><div class="sn g" style="font-size:16px" id="stat-mes">$847k</div><div class="sl">Este mes</div></div>
+      </div>
+      <div class="alert aal" onclick="toast('ph-taller','🛒 Creando orden de compra...')">
+        <div class="ai">⚠️</div><div class="at"><b>Filtro aceite Nissan</b> — 2 unidades. Comprar antes del jueves.</div>
+      </div>
+      <div class="alert abl" id="alerta-aprobacion" onclick="toast('ph-taller','✅ OT #6810 lista para comenzar')">
+        <div class="ai">✅</div><div class="at"><b>Camilo Solís aprobó OT #6810</b> — $381.740. Puedes comenzar.</div>
+      </div>
+      <div class="sec-h"><div class="lbl">OTs activas</div><button class="sec-action" onclick="showT('nueva-ot',document.querySelector('#tabs-t .tab:nth-child(2)'))">+ Nueva OT</button></div>
+      <div id="ots-list">
+        <!-- OT con FUNCIÓN 1 integrada -->
+        <div class="ot prog" id="ot-6810">
+          <div class="ot-top"><div class="ot-pat">RV·5249·6</div><div class="ot-amt">$381.740</div></div>
+          <div class="ot-desc">Nissan Pick Up 1998 · Choque tren delantero · <span style="color:var(--wa);font-size:11px">✓ Aprobado vía WA</span></div>
+          <div class="ot-bot"><div class="ot-who">Camilo Solís</div><span class="bdg bpr" id="bdg-6810">En proceso</span></div>
+          <!-- FUNCIÓN 1: cambiar estado -->
+          <div class="ot-actions">
+            <span class="est-lbl">Estado:</span>
+            <button class="est-btn" onclick="cambiarEstado('6810',this,'pend')" title="Pendiente aprobación">⏳ Pendiente</button>
+            <button class="est-btn active-prog" onclick="cambiarEstado('6810',this,'prog')" title="En proceso">🔵 En proceso</button>
+            <button class="est-btn" onclick="cambiarEstado('6810',this,'wait')" title="Esperando repuesto">🔴 Esp. repuesto</button>
+            <button class="est-btn" onclick="cambiarEstado('6810',this,'done')" title="Listo para retirar">✅ Listo</button>
+          </div>
+        </div>
+        <div class="ot done" id="ot-flwk">
+          <div class="ot-top"><div class="ot-pat">FLWK·45</div><div class="ot-amt">$128.000</div></div>
+          <div class="ot-desc">Toyota Hilux 2015 · Cambio aceite + frenos</div>
+          <div class="ot-bot"><div class="ot-who">María González</div><span class="bdg bd2" id="bdg-flwk">Listo — WA enviado ✓</span></div>
+          <div class="ot-actions">
+            <span class="est-lbl">Estado:</span>
+            <button class="est-btn" onclick="cambiarEstado('flwk',this,'pend')">⏳ Pendiente</button>
+            <button class="est-btn" onclick="cambiarEstado('flwk',this,'prog')">🔵 En proceso</button>
+            <button class="est-btn" onclick="cambiarEstado('flwk',this,'wait')">🔴 Esp. repuesto</button>
+            <button class="est-btn active-done" onclick="cambiarEstado('flwk',this,'done')">✅ Listo</button>
+          </div>
+          <!-- FUNCIÓN 2: foto salida (visible cuando está Listo) -->
+          <div class="foto-salida-zone" id="fsal-flwk" style="margin-top:10px">
+            <div class="fsal-top">
+              <div class="fsal-lbl">📸 Fotos de salida</div>
+              <span style="font-size:10px;color:rgba(0,214,143,0.6)">Documenta el estado al entregar</span>
+            </div>
+            <div class="fsal-grid" id="fsal-grid-flwk">
+              <div class="fsal-thumb" onclick="toast('ph-taller','Foto exterior izquierdo')">🚗</div>
+              <div class="fsal-thumb" onclick="toast('ph-taller','Foto tablero/interior')">🪟</div>
+              <div class="fsal-add" onclick="addFotoSalida('flwk')">📷<span>+ Agregar</span></div>
+            </div>
+          </div>
+          <!-- FUNCIÓN 3: boleta electrónica (visible cuando está Listo) -->
+          <div style="margin-top:10px">
+            <button class="btn bamb" style="font-size:12px;padding:10px" onclick="showModal('ph-taller','boleta-flwk')">🧾 Emitir boleta electrónica</button>
+          </div>
+        </div>
+        <div class="ot wait" id="ot-bprc">
+          <div class="ot-top"><div class="ot-pat">BPRC·12</div><div class="ot-amt">$54.990</div></div>
+          <div class="ot-desc">Chevrolet Spark 2018 · Diagnóstico eléctrico</div>
+          <div class="ot-bot"><div class="ot-who">Jorge Muñoz</div><span class="bdg bw" id="bdg-bprc">Esperando repuesto</span></div>
+          <div class="ot-actions">
+            <span class="est-lbl">Estado:</span>
+            <button class="est-btn" onclick="cambiarEstado('bprc',this,'pend')">⏳ Pendiente</button>
+            <button class="est-btn" onclick="cambiarEstado('bprc',this,'prog')">🔵 En proceso</button>
+            <button class="est-btn active-wait" onclick="cambiarEstado('bprc',this,'wait')">🔴 Esp. repuesto</button>
+            <button class="est-btn" onclick="cambiarEstado('bprc',this,'done')">✅ Listo</button>
+          </div>
+        </div>
+        <div class="ot pend" id="ot-hjpk">
+          <div class="ot-top"><div class="ot-pat">HJPK·91</div><div class="ot-amt">$212.500</div></div>
+          <div class="ot-desc">Hyundai Tucson 2020 · Suspensión · <span style="color:var(--amber);font-size:11px">⏳ Esperando aprobación WA</span></div>
+          <div class="ot-bot"><div class="ot-who">Ana Pérez</div><span class="bdg bp" id="bdg-hjpk">Pendiente aprobación</span></div>
+          <div class="ot-actions">
+            <span class="est-lbl">Estado:</span>
+            <button class="est-btn active-pend" onclick="cambiarEstado('hjpk',this,'pend')">⏳ Pendiente</button>
+            <button class="est-btn" onclick="cambiarEstado('hjpk',this,'prog')">🔵 En proceso</button>
+            <button class="est-btn" onclick="cambiarEstado('hjpk',this,'wait')">🔴 Esp. repuesto</button>
+            <button class="est-btn" onclick="cambiarEstado('hjpk',this,'done')">✅ Listo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NUEVA OT -->
+    <div class="scr" id="t-nueva-ot">
+      <div class="lbl">Nueva orden de trabajo</div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:10px">Datos del vehículo</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="form-group">
+            <div class="form-label">Patente</div>
+            <input class="form-input mono" id="ot-patente" type="text" placeholder="XXXX·00" maxlength="8" oninput="this.value=this.value.toUpperCase();buscarPatente(this.value)">
+          </div>
+          <div id="autocompletado-vehiculo" style="display:none">
+            <div class="alert abl" style="cursor:default">
+              <div class="ai">🔍</div>
+              <div class="at" id="autocompletado-txt"></div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><div class="form-label">Marca</div><input class="form-input" id="ot-marca" type="text" placeholder="Ej: Nissan"></div>
+            <div class="form-group"><div class="form-label">Modelo</div><input class="form-input" id="ot-modelo" type="text" placeholder="Ej: Hilux"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><div class="form-label">Año</div><input class="form-input" id="ot-anio" type="number" placeholder="2020"></div>
+            <div class="form-group"><div class="form-label">Kms actuales</div><input class="form-input" id="ot-kms" type="number" placeholder="80000"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:10px">Datos del cliente</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="form-group"><div class="form-label">Nombre</div><input class="form-input" id="ot-cliente" type="text" placeholder="Nombre completo"></div>
+          <div class="form-group"><div class="form-label">WhatsApp</div><input class="form-input" id="ot-wa" type="tel" placeholder="+56 9 XXXX XXXX"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:10px">Problema reportado</div>
+        <textarea class="form-input" id="ot-desc" rows="3" placeholder="Describe el problema..." style="resize:none;line-height:1.5"></textarea>
+      </div>
+      <div class="card">
+        <div class="sec-h" style="margin-bottom:10px"><div class="lbl">I. Trabajos a realizar</div></div>
+        <div class="items-list" id="trabajos-list"></div>
+        <div class="add-row" onclick="addTrabajo()" style="margin-top:8px"><span>+</span> Agregar trabajo</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)">
+          <div class="subtotal-row"><span class="stk">Subtotal mano de obra</span><span class="stv" id="subtotal-trabajos">$0</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec-h" style="margin-bottom:10px"><div class="lbl">II. Repuestos</div></div>
+        <div class="items-list" id="repuestos-list"></div>
+        <div class="add-row" onclick="addRepuesto()" style="margin-top:8px"><span>+</span> Agregar repuesto</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bd)">
+          <div class="subtotal-row"><span class="stk">Subtotal repuestos</span><span class="stv" id="subtotal-repuestos">$0</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="subtotal-row"><span class="stk">Monto neto</span><span class="stv" id="monto-neto">$0</span></div>
+        <div class="subtotal-row"><span class="stk">IVA 19%</span><span class="stv" id="monto-iva">$0</span></div>
+        <div class="subtotal-row big"><span class="stk" style="font-size:14px;font-weight:700;color:var(--t1)">Total a pagar</span><span class="stv blue" id="monto-total">$0</span></div>
+      </div>
+      <div class="card">
+        <div class="lbl" style="margin-bottom:10px">Fotos del diagnóstico</div>
+        <div class="fgrid" id="fotos-grid">
+          <div class="add-row" onclick="addFoto()" style="height:80px;flex-direction:column;gap:6px;font-size:20px">📷<span style="font-size:11px">Agregar foto</span></div>
+        </div>
+        <div class="alert abl" style="margin-top:10px;cursor:default">
+          <div class="ai">💡</div>
+          <div class="at">Las fotos se adjuntan al link del presupuesto que el cliente recibe por WhatsApp.</div>
+        </div>
+      </div>
+      <button class="btn bbl" onclick="crearOT()">📋 Crear OT y generar link de presupuesto</button>
+      <div style="height:10px"></div>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="scr" id="t-agenda">
+      <div class="stats">
+        <div class="stat sb"><div class="sn b">4</div><div class="sl">Hoy</div></div>
+        <div class="stat sg"><div class="sn g">2</div><div class="sl">Cupos libres</div></div>
+        <div class="stat"><div class="sn">6</div><div class="sl">Mañana</div></div>
+      </div>
+      <div class="agcard">
+        <div class="agh"><div class="agd">Sábado 23 mayo</div><div class="agc">2 cupos libres</div></div>
+        <div class="slots">
+          <div class="slot" onclick="toast('ph-taller','OT #6810 — Camilo Solís en proceso')"><div class="st">09:00</div><div class="sc"><div class="sn">Camilo Solís</div><div class="sd">RV·5249·6 · Suspensión</div></div><span class="bdg bpr">En proceso</span></div>
+          <div class="slot" onclick="toast('ph-taller','Toyota lista para retiro')"><div class="st">10:30</div><div class="sc"><div class="sn">María González</div><div class="sd">FLWK·45 · Mantención</div></div><span class="bdg bd2">Listo</span></div>
+          <div class="slot sfree" onclick="toast('ph-taller','Cupo disponible')"><div class="st">12:00</div><div class="sc"><div class="sn">— Cupo libre —</div></div></div>
+          <div class="slot" onclick="toast('ph-taller','Esperando repuesto para Spark')"><div class="st">14:00</div><div class="sc"><div class="sn">Jorge Muñoz</div><div class="sd">BPRC·12 · Eléctrico</div></div><span class="bdg bw">Esp. repuesto</span></div>
+          <div class="slot" onclick="toast('ph-taller','Presupuesto pendiente de aprobación')"><div class="st">15:30</div><div class="sc"><div class="sn">Ana Pérez</div><div class="sd">HJPK·91 · Suspensión</div></div><span class="bdg bp">Pendiente</span></div>
+          <div class="slot sfree" onclick="toast('ph-taller','Cupo disponible')"><div class="st">17:00</div><div class="sc"><div class="sn">— Cupo libre —</div></div></div>
+        </div>
+      </div>
+      <div class="alert awa"><div class="ai">📱</div><div class="at"><b>3 reservas esta semana</b> llegaron desde el perfil de Fixall sin que tuvieras que hacer nada.</div></div>
+      <button class="btn bout" onclick="toast('ph-taller','📅 Vista semanal...')">Ver semana completa</button>
+    </div>
+
+    <!-- PATENTES -->
+    <div class="scr" id="t-patentes">
+      <div class="search"><div class="sic">🔍</div><input type="text" placeholder="Buscar patente..." value="RV5249-6" oninput="toast('ph-taller','Buscando '+this.value+'...')"></div>
+      <div class="pat-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div><div class="pat-num">RV·5249·6</div><div class="pat-brand">Nissan Pick Up D Cab · 1998 · Verde · Camilo Solís</div></div>
+          <div class="kmbdg"><div class="kmn">187.430</div><div class="kml">kms</div></div>
+        </div>
+        <div class="pat-meta">
+          <div><div class="ml">Aceite</div><div class="mv">15W40</div></div>
+          <div><div class="ml">Garantía</div><div class="mv" style="color:var(--green);font-size:11px">Susp. 90d</div></div>
+          <div><div class="ml">N° motor</div><div class="mv" style="font-size:10px">KA24603241M</div></div>
+          <div><div class="ml">Próx. mantención</div><div class="mv" style="color:var(--amber);font-size:11px">~2.570 kms</div></div>
+        </div>
+      </div>
+      <div class="alert aal"><div class="ai">🔧</div><div class="at">Próximo cambio de aceite en <b>2.570 kms.</b> Avisar al cliente al entregar.</div></div>
+      <div class="sec-h"><div class="lbl">Fotos del diagnóstico — OT #6810</div></div>
+      <div class="fgrid">
+        <div class="foto" onclick="showModal('ph-taller','foto-bandeja')"><div class="fimg">🔩</div><div class="fbody"><div class="ftit">Bandeja delantera izq.</div><div class="fsub">Deformación por impacto</div></div></div>
+        <div class="foto" onclick="showModal('ph-taller','foto-terminal')"><div class="fimg">⚙️</div><div class="fbody"><div class="ftit">Terminal exterior</div><div class="fsub">Juego excesivo</div></div></div>
+        <div class="foto" onclick="showModal('ph-taller','foto-amort')"><div class="fimg">🔧</div><div class="fbody"><div class="ftit">Amortiguador izq.</div><div class="fsub">Pérdida de aceite</div></div></div>
+        <div class="foto" onclick="showModal('ph-taller','foto-alin')"><div class="fimg">📐</div><div class="fbody"><div class="ftit">Alineación</div><div class="fsub">Corrección incluida</div></div></div>
+      </div>
+      <div class="lbl">Historial de visitas</div>
+      <div class="tl">
+        <div class="tli"><div class="tls"><div class="tld"></div><div class="tlv"></div></div><div class="tlc" onclick="toast('ph-taller','OT #6810 abierta')"><div class="tlh"><span class="tld2">13 dic 2025 · OT #6810</span><span class="tla">$381.740</span></div><div class="tldesc">Choque tren delantero. Bandeja, terminales y amortiguadores.</div><div class="tltags"><span class="tltag">Suspensión</span><span class="tltag">Garantía 90d</span></div><div class="tlwa">💬 "Mandaron fotos antes de empezar" · 6 msgs</div></div></div>
+        <div class="tli"><div class="tls"><div class="tld old"></div><div class="tlv"></div></div><div class="tlc" onclick="toast('ph-taller','OT #5941 — Mantención')"><div class="tlh"><span class="tld2">2 ago 2025 · OT #5941</span><span class="tla">$68.000</span></div><div class="tldesc">Cambio aceite 15W40 + filtro + frenos traseros.</div><div class="tltags"><span class="tltag">Mantención</span><span class="tltag">Aceite 15W40</span></div><div class="tlwa">💬 3 mensajes</div></div></div>
+        <div class="tli"><div class="tls"><div class="tld old"></div></div><div class="tlc" onclick="toast('ph-taller','OT #5312 — Primera visita')"><div class="tlh"><span class="tld2">14 mar 2025 · OT #5312</span><span class="tla">$145.000</span></div><div class="tldesc">Pastillas y discos delanteros. Revisión escape.</div><div class="tltags"><span class="tltag">Frenos</span></div><div class="tlwa" style="color:var(--t3)">Sin mensajes registrados</div></div></div>
+      </div>
+      <button class="btn bbl" onclick="showT('nueva-ot',document.querySelector('#tabs-t .tab:nth-child(2)'))">+ Nueva OT para este vehículo</button>
+    </div>
+
+    <!-- INVENTARIO -->
+    <div class="scr" id="t-inventario">
+      <div class="search"><div class="sic">🔍</div><input type="text" placeholder="Buscar repuesto..." oninput="toast('ph-taller','Filtrando inventario...')"></div>
+      <div class="stats">
+        <div class="stat sb"><div class="sn">84</div><div class="sl">Productos</div></div>
+        <div class="stat"><div class="sn r">6</div><div class="sl">Stock bajo</div></div>
+        <div class="stat sg"><div class="sn g" style="font-size:16px">$1.2M</div><div class="sl">Valor</div></div>
+      </div>
+      <div class="alert are" onclick="toast('ph-taller','🛒 Agregado a orden de compra')"><div class="ai">🔴</div><div class="at"><b>Filtro aceite Nissan</b> — 2 unidades · Toca para pedir</div></div>
+      <div class="inv" onclick="toast('ph-taller','Aceite motor 15W40 — 18 litros')"><div class="iico">🛢️</div><div class="iinf"><div class="iname">Aceite motor 15W40</div><div class="iref">ACE-15W40-4L · Aceites</div></div><div class="ir"><div class="iqty qg">18 lts</div><div class="ipr">$4.200/lt</div><div class="bw2"><div class="bf fg" style="width:90%"></div></div></div></div>
+      <div class="inv" onclick="toast('ph-taller','Bandeja superior Nissan — 5 unidades')"><div class="iico">⚙️</div><div class="iinf"><div class="iname">Bandeja superior Nissan</div><div class="iref">BAN-NIS-SUP · Suspensión</div></div><div class="ir"><div class="iqty qa">5 un</div><div class="ipr">$32.773/un</div><div class="bw2"><div class="bf fa" style="width:42%"></div></div></div></div>
+      <button class="btn bbl" onclick="showModal('ph-taller','nuevo-repuesto')">+ Agregar repuesto</button>
+    </div>
+
+    <!-- REPORTES -->
+    <div class="scr" id="t-reportes">
+      <div class="period">
+        <button class="pt" onclick="setPeriod(this)">7d</button>
+        <button class="pt on" onclick="setPeriod(this)">Mes</button>
+        <button class="pt" onclick="setPeriod(this)">3m</button>
+        <button class="pt" onclick="setPeriod(this)">Año</button>
+      </div>
+      <div class="kgrid">
+        <div class="kpi" onclick="toast('ph-taller','Desglose por servicio disponible')"><div class="kl">Ingresos</div><div class="kv" style="font-size:17px">$2.847.230</div><div class="ks">↑ +18% vs abril</div></div>
+        <div class="kpi" onclick="toast('ph-taller','Ver detalle de OTs')"><div class="kl">OTs cerradas</div><div class="kv">34</div><div class="ks">↑ +6 vs abril</div></div>
+        <div class="kpi" onclick="toast('ph-taller','Distribución de tickets')"><div class="kl">Ticket promedio</div><div class="kv" style="font-size:17px">$83.742</div><div class="ks n">Sin cambio</div></div>
+        <div class="kpi" onclick="toast('ph-taller','8 clientes nuevos este mes')"><div class="kl">Clientes únicos</div><div class="kv">27</div><div class="ks">8 nuevos</div></div>
+        <div class="kpi kwide" onclick="toast('ph-taller','11 reservas via Fixall = 40% del total')"><div class="kl">Reservas vía Fixall</div><div class="kv">11</div><div class="ks">40% del total mensual</div></div>
+      </div>
+      <div class="chart">
+        <div class="cht">Ingresos por semana</div>
+        <div class="bars">
+          <div class="bc" onclick="toast('ph-taller','S1: $412.000')"><div class="bv">$412k</div><div class="bb" style="height:46%"></div><div class="bm">S1</div></div>
+          <div class="bc" onclick="toast('ph-taller','S2: $631.000')"><div class="bv">$631k</div><div class="bb" style="height:70%"></div><div class="bm">S2</div></div>
+          <div class="bc" onclick="toast('ph-taller','S3: $890.000 ⭐ Mejor semana')"><div class="bv">$890k</div><div class="bb hl" style="height:100%"></div><div class="bm">S3</div></div>
+          <div class="bc" onclick="toast('ph-taller','S4: $914.000')"><div class="bv">$914k</div><div class="bb" style="height:97%"></div><div class="bm">S4</div></div>
+        </div>
+        <div class="cfoot"><span>Mejor: S4</span><span>Total: $2.847.230</span></div>
+      </div>
+      <div class="rev" onclick="toast('ph-taller','Responder reseña de María González')"><div class="revt"><div><div class="revn">María González</div><div class="stars">★★★★★</div></div><div class="revd">hace 2 días</div></div><div class="revtxt">"Las fotos del diagnóstico antes de empezar — excelente."</div></div>
+    </div>
+
+  </div>
+  <div class="bnav">
+    <button class="bn on" onclick="showT('inicio',null)"><div class="bni">🏠</div>Inicio</button>
+    <button class="bn" onclick="showT('nueva-ot',document.querySelector('#tabs-t .tab:nth-child(2)'))"><div class="bni">📋</div>Nueva OT</button>
+    <button class="bn" onclick="showT('agenda',null)"><div class="bni">📅</div>Agenda</button>
+    <button class="bn" onclick="showT('patentes',null)"><div class="bni">🚗</div>Patentes</button>
+    <button class="bn" onclick="showT('reportes',null)"><div class="bni">📊</div>Reportes</button>
+  </div>
+
+  <!-- MODALS TALLER -->
+  <div class="modal" id="modal-ph-taller" onclick="closeModal('ph-taller')">
+    <div class="msheet" id="msheet-ph-taller" onclick="event.stopPropagation()">
+      <div class="mhandle"></div>
+      <div id="mcontent-ph-taller"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast-ph-taller"></div>
+</div>
+
+<!-- ══════════ VISTA CLIENTE ══════════ -->
+<div class="phone" id="ph-cliente" style="display:none">
+  <div class="notch"><div class="nb"></div></div>
+  <div class="topbar">
+    <div class="logo"><span class="lf">Fix</span><span class="la">all</span></div>
+    <div class="tr">
+      <div class="ibtn" onclick="toast('ph-cliente','🔔 Tu auto está listo para retirar')">🔔<div class="ndot"></div></div>
+      <div class="av avg" onclick="toast('ph-cliente','Perfil de Camilo Solís')">CS</div>
+    </div>
+  </div>
+  <div class="tabs" id="tabs-c">
+    <button class="tab gon" onclick="showC('vehiculos',this)">Vehículos</button>
+    <button class="tab" onclick="showC('buscar',this)">Buscar taller</button>
+    <button class="tab" onclick="showC('mi-ot',this)">Mi OT</button>
+    <button class="tab" onclick="showC('presupuesto',this)">Presupuesto</button>
+    <button class="tab" onclick="showC('historial',this)">Historial</button>
+  </div>
+  <div class="scroll" id="scroll-c">
+
+    <!-- VEHÍCULOS -->
+    <div class="scr on" id="c-vehiculos">
+      <div class="veh" onclick="showC('mi-ot',document.querySelector('#tabs-c .tab:nth-child(3)'))">
+        <div class="vt">
+          <div><div class="vp">RV·5249·6</div><div class="vb">Nissan Pick Up D Cab · 1998</div></div>
+          <div style="font-size:32px">🚗</div>
+        </div>
+        <div class="vmant"><div><div class="vml">Próximo cambio de aceite</div><div class="vmv">~2.570 kms · julio 2026</div></div><span class="bdg bpr">En taller</span></div>
+        <div class="gbox"><div class="gl">🛡️ Garantía activa</div><div class="gv">Suspensión · vence 13 mar 2026</div></div>
+      </div>
+      <div class="veh" onclick="toast('ph-cliente','Honda CB500 — al día')">
+        <div class="vt">
+          <div><div class="vp">MOTO·23</div><div class="vb">Honda CB 500 · 2020</div></div>
+          <div style="font-size:32px">🏍️</div>
+        </div>
+        <div class="vmant"><div><div class="vml">Próxima mantención</div><div class="vmv">Octubre 2026</div></div><span class="bdg bd2">Al día</span></div>
+      </div>
+      <div class="alert agr" onclick="showC('buscar',document.querySelector('#tabs-c .tab:nth-child(2)'))">
+        <div class="ai">🔔</div>
+        <div class="at"><b>3 meses</b> desde el último cambio de aceite. ¿Buscamos un taller?</div>
+      </div>
+      <button class="btn bgr" onclick="showModal('ph-cliente','nuevo-vehiculo')">+ Agregar vehículo</button>
+    </div>
+
+    <!-- BUSCAR TALLER -->
+    <div class="scr" id="c-buscar">
+      <div class="search"><div class="sic">🔍</div><input type="text" placeholder="Buscar por comuna o especialidad..."></div>
+      <div class="stats">
+        <div class="stat sg"><div class="sn g">12</div><div class="sl">Con cupos hoy</div></div>
+        <div class="stat"><div class="sn">34</div><div class="sl">En tu zona</div></div>
+        <div class="stat sa"><div class="sn a">4.7★</div><div class="sl">Promedio</div></div>
+      </div>
+      <div class="tcard" onclick="showModal('ph-cliente','taller-vl')">
+        <div class="ttop">
+          <div class="tav" style="background:linear-gradient(135deg,#1A6BFF,#0C44CC)">VL</div>
+          <div class="tinf">
+            <div class="tn">Vergara y Lerdón</div>
+            <div class="ta">El Cardal 1153 · San Vicente</div>
+            <div class="tr2">★★★★★ 4.9 · 47 reseñas</div>
+            <div class="tspecs"><span class="tspec">Mecánica</span><span class="tspec">Suspensión</span><span class="tspec">Frenos</span></div>
+          </div>
+        </div>
+        <div class="tbot"><div class="tcupos">✓ 3 cupos hoy</div><div class="tdist">2.3 km</div></div>
+      </div>
+    </div>
+
+    <!-- MI OT -->
+    <div class="scr" id="c-mi-ot">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+          <div style="font-size:14px;font-weight:800;color:var(--t1)">Vergara y Lerdón · OT #6810</div>
+          <div style="font-size:11px;color:var(--t3)">13 dic 2025</div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="sdot done">✓</div><div class="slbl done">Recibido</div></div>
+          <div class="sline done"></div>
+          <div class="step"><div class="sdot done">✓</div><div class="slbl done">Presupuesto</div></div>
+          <div class="sline done"></div>
+          <div class="step"><div class="sdot act">●</div><div class="slbl act">En proceso</div></div>
+          <div class="sline"></div>
+          <div class="step"><div class="sdot">○</div><div class="slbl">Listo</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t3)">Vehículo</span><span style="color:var(--t1);font-weight:700;font-family:var(--mono)">Nissan RV·5249·6</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t3)">Trabajo</span><span style="color:var(--t1);font-weight:500">Choque tren delantero</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--t3)">Entrega estimada</span><span style="color:var(--green);font-weight:700">Lunes 16 dic</span></div>
+        </div>
+      </div>
+      <div class="alert abl" onclick="showC('presupuesto',document.querySelector('#tabs-c .tab:nth-child(4)'))">
+        <div class="ai">📋</div>
+        <div class="at"><b>Presupuesto aprobado</b> — $381.740. Toca para ver el detalle.</div>
+      </div>
+      <div class="gbox" style="border-radius:var(--r)">
+        <div><div class="gl">🛡️ Garantía incluida</div><div style="font-size:11px;color:rgba(0,214,143,0.7);margin-top:1px">90 días en mano de obra y repuestos</div></div>
+        <div class="gv">90d</div>
+      </div>
+      <button class="btn bwa2" onclick="toast('ph-cliente','📱 Abriendo WhatsApp con Vergara y Lerdón...')">💬 Hablar por WhatsApp</button>
+    </div>
+
+    <!-- PRESUPUESTO -->
+    <div class="scr" id="c-presupuesto">
+      <div class="card" style="background:linear-gradient(135deg,var(--s2),var(--s3));border-color:rgba(26,107,255,0.2)">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+          <div class="tav" style="background:linear-gradient(135deg,#1A6BFF,#0C44CC);width:44px;height:44px;border-radius:12px;flex-shrink:0;font-size:14px;font-weight:800">VL</div>
+          <div><div style="font-size:15px;font-weight:800;color:var(--t1)">Vergara y Lerdón</div><div style="font-size:11px;color:var(--t3);margin-top:1px">El Cardal 1153 · San Vicente · ★★★★★ 4.9</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--s3);border-radius:var(--r2b);padding:10px 12px">
+          <div style="font-size:13px;font-weight:700;color:var(--t1)">OT #6810 · 13 dic 2025</div>
+          <span class="bdg bd2" id="presup-badge">✓ Aprobado</span>
+        </div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);padding:14px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:24px;font-weight:800;color:var(--t1);font-family:var(--mono);letter-spacing:.04em">RV · 5249 · 6</div><div style="font-size:12px;color:var(--t2);margin-top:3px">Nissan Pick Up D Cab · 1998 · Verde</div></div>
+        <div style="font-size:36px">🚗</div>
+      </div>
+      <div class="lbl">I. Mano de obra</div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden">
+        <div class="prow2"><div><div class="prl">Cambio bandeja superior ×2</div><div class="prd">Izq. y der.</div></div><div class="prr"><div class="prv">$64.000</div></div></div>
+        <div class="prow2"><div><div class="prl">Cambio terminales ×2</div></div><div class="prr"><div class="prv">$44.000</div></div></div>
+        <div class="prow2"><div><div class="prl">Cambio amortiguadores</div></div><div class="prr"><div class="prv">$28.000</div></div></div>
+        <div class="prow2" style="background:var(--blue4)"><div><div class="prl" style="font-weight:800">Subtotal mano de obra</div></div><div class="prr"><div class="prv" style="color:var(--blue)">$146.000</div></div></div>
+      </div>
+      <div class="lbl">II. Repuestos</div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden">
+        <div class="prow2"><div><div class="prl">Bandeja superior izquierda</div><div class="prd">2 un · $32.773 c/u</div></div><div class="prr"><div class="prc">×2</div><div class="prv">$65.546</div></div></div>
+        <div class="prow2"><div><div class="prl">Terminal int., ext. y unión</div><div class="prd">Kit · $54.622 · KYB</div></div><div class="prr"><div class="prc">×2</div><div class="prv">$109.244</div></div></div>
+        <div class="prow2" style="background:var(--blue4)"><div><div class="prl" style="font-weight:800">Subtotal repuestos</div></div><div class="prr"><div class="prv" style="color:var(--blue)">$174.790</div></div></div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden">
+        <div style="padding:10px 14px;display:flex;justify-content:space-between;border-bottom:1px solid var(--bd);font-size:12px"><span style="color:var(--t2)">Monto neto</span><span style="color:var(--t1);font-weight:600">$320.790</span></div>
+        <div style="padding:10px 14px;display:flex;justify-content:space-between;border-bottom:1px solid var(--bd);font-size:12px"><span style="color:var(--t2)">IVA 19%</span><span style="color:var(--t1);font-weight:600">$60.950</span></div>
+        <div style="padding:14px;display:flex;justify-content:space-between;align-items:center;background:var(--blue4)">
+          <span style="font-size:15px;font-weight:800;color:var(--t1)">Total a pagar</span>
+          <span style="font-size:20px;font-weight:800;color:var(--blue)">$381.740</span>
+        </div>
+      </div>
+      <div class="gbox" style="border-radius:var(--r)">
+        <div><div class="gl">🛡️ Garantía incluida</div><div style="font-size:11px;color:rgba(0,214,143,0.7);margin-top:2px">90 días · mano de obra y repuestos</div></div>
+        <div class="gv">90d</div>
+      </div>
+      <div class="nota">
+        <div class="ntt">⚠️ Nota importante</div>
+        <div class="ntx">Al desarmar pueden aparecer trabajos adicionales. Te avisaremos antes de continuar.</div>
+      </div>
+      <div class="apbanner" id="apbanner">
+        <div class="apem">✅</div>
+        <div class="aptit">¡Presupuesto aprobado!</div>
+        <div class="apdesc">El taller fue notificado y comenzará el trabajo.<br>Te avisaremos por WhatsApp cuando esté listo.</div>
+      </div>
+      <div id="btns-aprobar" style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn bgr" style="padding:15px;font-size:14px" onclick="aprobarPresupuesto()">✅ Aprobar presupuesto — $381.740</button>
+        <button class="btn bwa2" onclick="toast('ph-cliente','📱 Abriendo WhatsApp...')">💬 Preguntar por WhatsApp</button>
+        <button class="btn bdng" onclick="rechazarPresupuesto()">Rechazar presupuesto</button>
+      </div>
+      <button class="btn bwa2" id="btn-wa-final" style="display:none" onclick="toast('ph-cliente','📱 Abriendo WhatsApp...')">💬 Seguir conversación por WhatsApp</button>
+    </div>
+
+    <!-- HISTORIAL -->
+    <div class="scr" id="c-historial">
+      <div class="lbl">Historial — RV·5249·6</div>
+      <div class="wahist" onclick="showModal('ph-cliente','hist-6810')">
+        <div class="wht"><div class="who">OT #6810 · Vergara y Lerdón</div><div class="whd">13 dic 2025</div></div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:7px"><span class="tltag">Suspensión</span><span class="tltag" style="color:var(--blue)">$381.740</span><span class="tltag" style="color:var(--green)">✓ Aprobado</span></div>
+        <div class="whsum">El mecánico detectó daño en bandeja, terminales y amortiguadores. Mandó 4 fotos antes de presupuestar.</div>
+        <div class="whbot"><div class="whm">💬 6 mensajes en WhatsApp</div><div class="whl">Ver conversación ↗</div></div>
+      </div>
+      <div class="gastobox" onclick="toast('ph-cliente','3 visitas · desde marzo 2025')">
+        <div class="gn">$594.740</div>
+        <div class="gl2">Total gastado en este vehículo</div>
+        <div class="gsub">3 visitas · desde marzo 2025</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="bnav">
+    <button class="bn gon" onclick="showC('vehiculos',null)"><div class="bni">🚗</div>Vehículos</button>
+    <button class="bn" onclick="showC('buscar',null)"><div class="bni">🔍</div>Buscar</button>
+    <button class="bn" onclick="showC('mi-ot',null)"><div class="bni">📋</div>Mi OT</button>
+    <button class="bn" onclick="showC('presupuesto',null)"><div class="bni">💰</div>Presupuesto</button>
+    <button class="bn" onclick="showC('historial',null)"><div class="bni">📜</div>Historial</button>
+  </div>
+
+  <!-- MODALS CLIENTE -->
+  <div class="modal" id="modal-ph-cliente" onclick="closeModal('ph-cliente')">
+    <div class="msheet" id="msheet-ph-cliente" onclick="event.stopPropagation()">
+      <div class="mhandle"></div>
+      <div id="mcontent-ph-cliente"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast-ph-cliente"></div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const state = {
+  trabajos: [], repuestos: [], fotos: 0,
+  otCount: 6811,
+  perfilTaller: {
+    nombre: 'Vergara y Lerdón',
+    rut: '12.265.488-5',
+    direccion: 'El Cardal 1153',
+    comuna: 'San Vicente de Tagua Tagua',
+    telefono: '+56 9 6136 4151',
+    especialidades: ['Mecánica','Suspensión','Frenos','Chapa y pintura']
+  }
+};
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+const TS = ['inicio','nueva-ot','agenda','patentes','inventario','reportes'];
+const CS = ['vehiculos','buscar','mi-ot','presupuesto','historial'];
+
+function showT(name, tabEl) {
+  TS.forEach(s => { const e = document.getElementById('t-'+s); if(e){e.classList.remove('on');e.style.display='none';}});
+  document.querySelectorAll('#tabs-t .tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('#ph-taller .bn').forEach(n => n.classList.remove('on'));
+  const sc = document.getElementById('t-'+name);
+  if(sc){sc.classList.add('on');sc.style.display='flex';}
+  if(tabEl) tabEl.classList.add('on');
+  const idx = TS.indexOf(name);
+  const ni = document.querySelectorAll('#ph-taller .bn');
+  if(ni[idx]) ni[idx].classList.add('on');
+  document.getElementById('scroll-t').scrollTo({top:0,behavior:'smooth'});
+}
+
+function showC(name, tabEl) {
+  CS.forEach(s => { const e = document.getElementById('c-'+s); if(e){e.classList.remove('on');e.style.display='none';}});
+  document.querySelectorAll('#tabs-c .tab').forEach(t => {t.classList.remove('on');t.classList.remove('gon');});
+  document.querySelectorAll('#ph-cliente .bn').forEach(n => n.classList.remove('gon'));
+  const sc = document.getElementById('c-'+name);
+  if(sc){sc.classList.add('on');sc.style.display='flex';}
+  if(tabEl) tabEl.classList.add('gon');
+  const idx = CS.indexOf(name);
+  const ni = document.querySelectorAll('#ph-cliente .bn');
+  if(ni[idx]) ni[idx].classList.add('gon');
+  document.getElementById('scroll-c').scrollTo({top:0,behavior:'smooth'});
+}
+
+function setMode(mode, btn) {
+  document.querySelectorAll('.mpb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('ph-taller').style.display = mode==='taller' ? 'flex' : 'none';
+  document.getElementById('ph-cliente').style.display = mode==='cliente' ? 'flex' : 'none';
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+const timers = {};
+function toast(id, msg) {
+  const t = document.getElementById('toast-'+id);
+  if(!t) return;
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(timers[id]);
+  timers[id] = setTimeout(() => t.classList.remove('on'), 2600);
+}
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+function showModal(phoneId, key) {
+  const content = getModalContent(key);
+  if(!content) return;
+  document.getElementById('mcontent-'+phoneId).innerHTML = content;
+  document.getElementById('modal-'+phoneId).classList.add('on');
+}
+function closeModal(phoneId) {
+  document.getElementById('modal-'+phoneId).classList.remove('on');
+}
+
+function getModalContent(key) {
+  const m = {
+    // FOTOS
+    'foto-bandeja': `<div style="font-size:60px;text-align:center;margin-bottom:12px">🔩</div><div class="mtit">Bandeja delantera izquierda</div><div class="msub">Deformación visible por impacto directo. Requiere reemplazo completo. Se reemplazaron ambas bandejas en par.</div>`,
+    'foto-terminal': `<div style="font-size:60px;text-align:center;margin-bottom:12px">⚙️</div><div class="mtit">Terminal exterior</div><div class="msub">Juego excesivo detectado. Se reemplazó el kit completo (interior, exterior y unión).</div>`,
+    'foto-amort': `<div style="font-size:60px;text-align:center;margin-bottom:12px">🔧</div><div class="mtit">Amortiguador izquierdo</div><div class="msub">Pérdida de aceite confirmada. Se reemplazaron izquierdo y derecho como par.</div>`,
+    'foto-alin': `<div style="font-size:60px;text-align:center;margin-bottom:12px">📐</div><div class="mtit">Alineación afectada</div><div class="msub">Corrección de geometría incluida sin costo adicional.</div>`,
+    // INVENTARIO
+    'nuevo-repuesto': `<div class="mtit">Agregar repuesto</div><div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><div class="form-group"><div class="form-label">Nombre</div><input class="form-input" placeholder="Nombre del repuesto"></div><div class="form-row"><div class="form-group"><div class="form-label">Código</div><input class="form-input" placeholder="REF-XXX"></div><div class="form-group"><div class="form-label">Categoría</div><select class="form-select"><option>Motor</option><option>Frenos</option><option>Suspensión</option><option>Eléctrico</option><option>Aceites</option></select></div></div><div class="form-row"><div class="form-group"><div class="form-label">Stock inicial</div><input class="form-input" type="number" placeholder="0"></div><div class="form-group"><div class="form-label">Precio/un</div><input class="form-input" type="number" placeholder="0"></div></div></div><button class="btn bbl" onclick="closeModal('ph-taller');toast('ph-taller','✅ Repuesto agregado al inventario')">Guardar repuesto</button>`,
+    // CLIENTE
+    'taller-vl': `<div class="mtit">Vergara y Lerdón</div><div class="msub">El Cardal 1153 · San Vicente · 2.3 km<br>★★★★★ 4.9 · 47 reseñas<br><br><b>Especialidades:</b> Mecánica general, Suspensión, Frenos, Chapa y pintura<br><br><b>Horario:</b> Lun–Vie 8:30–18:30 · Sáb 9:00–14:00<br><b>Teléfono:</b> +56 9 6136 4151</div><button class="btn bgr" onclick="closeModal('ph-cliente');toast('ph-cliente','📅 Hora reservada para el lunes 9:00')">Reservar hora</button>`,
+    'nuevo-vehiculo': `<div class="mtit">Agregar vehículo</div><div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px"><div class="form-group"><div class="form-label">Patente</div><input class="form-input mono" placeholder="XXXX·00" maxlength="8" oninput="this.value=this.value.toUpperCase()"></div><div class="form-row"><div class="form-group"><div class="form-label">Marca</div><input class="form-input" placeholder="Nissan"></div><div class="form-group"><div class="form-label">Modelo</div><input class="form-input" placeholder="Hilux"></div></div><div class="form-row"><div class="form-group"><div class="form-label">Año</div><input class="form-input" type="number" placeholder="2020"></div><div class="form-group"><div class="form-label">Color</div><input class="form-input" placeholder="Blanco"></div></div></div><button class="btn bgr" onclick="closeModal('ph-cliente');toast('ph-cliente','🚗 Vehículo agregado correctamente')">Guardar vehículo</button>`,
+    'hist-6810': `<div class="mtit">OT #6810 — Resumen</div><div class="msub"><b>Vergara y Lerdón · 13 dic 2025</b><br><br>Mecánico detectó daño en bandeja, terminales y amortiguadores. 4 fotos de diagnóstico. Presupuesto aprobado $381.740. Terminado en 2 días.<br><br>⭐ Calificación: 5/5</div><button class="btn bwa2" onclick="closeModal('ph-cliente');toast('ph-cliente','📱 Abriendo historial de WhatsApp...')">Ver conversación completa ↗</button>`,
+  };
+
+  // ── FUNCIÓN 3: BOLETA ELECTRÓNICA ──────────────────────────────────────
+  if(key === 'boleta-flwk') {
+    const folio = 'BET-'+Math.floor(Math.random()*90000+10000);
+    const fecha = new Date().toLocaleDateString('es-CL');
+    return `
+      <div class="mtit">Boleta electrónica</div>
+      <div class="msub" style="margin-bottom:14px">OT #FLWK45 · Toyota Hilux · María González</div>
+      <div class="boleta-card">
+        <div class="boleta-header">
+          <div class="boleta-num">Boleta electrónica · ${folio}</div>
+          <div class="boleta-title">Vergara y Lerdón</div>
+        </div>
+        <div class="boleta-body">
+          <div class="boleta-row"><span class="boleta-k">Fecha</span><span class="boleta-v">${fecha}</span></div>
+          <div class="boleta-row"><span class="boleta-k">Cliente</span><span class="boleta-v">María González</span></div>
+          <div class="boleta-row"><span class="boleta-k">Vehículo</span><span class="boleta-v" style="font-family:var(--mono)">FLWK·45</span></div>
+          <div class="boleta-divider"></div>
+          <div class="boleta-row"><span class="boleta-k">Cambio aceite 15W40</span><span class="boleta-v">$32.000</span></div>
+          <div class="boleta-row"><span class="boleta-k">Frenos traseros</span><span class="boleta-v">$53.000</span></div>
+          <div class="boleta-row"><span class="boleta-k">Repuestos</span><span class="boleta-v">$22.520</span></div>
+          <div class="boleta-divider"></div>
+          <div class="boleta-row"><span class="boleta-k">Neto</span><span class="boleta-v">$107.563</span></div>
+          <div class="boleta-row"><span class="boleta-k">IVA 19%</span><span class="boleta-v">$20.437</span></div>
+          <div class="boleta-divider"></div>
+          <div class="boleta-total-row">
+            <span class="boleta-total-lbl">Total</span>
+            <span class="boleta-total-val">$128.000</span>
+          </div>
+        </div>
+        <div class="boleta-sii">
+          <div class="boleta-sii-ico">🟢</div>
+          <div>
+            <div class="boleta-sii-txt">Timbre SII — Documento válido</div>
+            <div class="boleta-sii-sub">RUT: 12.265.488-5 · SII Región O'Higgins</div>
+          </div>
+        </div>
+        <div class="boleta-folio">Folio ${folio} · ${fecha} · Ambiente producción</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+        <button class="btn bbl" onclick="closeModal('ph-taller');toast('ph-taller','📲 Boleta enviada a María González por WhatsApp')">📲 Enviar por WhatsApp al cliente</button>
+        <button class="btn bout" onclick="closeModal('ph-taller');toast('ph-taller','📥 Descargando PDF de boleta...')">📥 Descargar PDF</button>
+      </div>`;
+  }
+
+  // ── FUNCIÓN 4: PERFIL TALLER (editable) ────────────────────────────────
+  if(key === 'perfil-taller') {
+    const p = state.perfilTaller;
+    const espAll = ['Mecánica','Suspensión','Frenos','Chapa y pintura','Motos','Eléctrico','Diagnóstico','Alineación'];
+    const espTags = espAll.map(e => {
+      const on = p.especialidades.includes(e) ? ' on' : '';
+      return `<span class="esp-tag${on}" onclick="toggleEsp(this,'${e}')">${e}</span>`;
+    }).join('');
+    return `
+      <div class="mtit">Perfil del taller</div>
+      <div class="perfil-preview" id="perfil-preview-box">
+        <div class="perfil-av">VL</div>
+        <div class="perfil-info">
+          <div class="perfil-name" id="prev-nombre">${p.nombre}</div>
+          <div class="perfil-addr" id="prev-addr">${p.direccion}, ${p.comuna}</div>
+          <div class="perfil-rating">★★★★★ 4.9 · 47 reseñas</div>
+          <div class="perfil-badge">✓ Perfil verificado en Fixall</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+        <div class="form-group">
+          <div class="form-label">Nombre del taller</div>
+          <input class="form-input" id="perf-nombre" value="${p.nombre}" oninput="document.getElementById('prev-nombre').textContent=this.value">
+        </div>
+        <div class="form-group">
+          <div class="form-label">RUT</div>
+          <input class="form-input mono" value="${p.rut}" style="font-size:13px">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <div class="form-label">Dirección</div>
+            <input class="form-input" id="perf-dir" value="${p.direccion}" oninput="actualizarAddr()">
+          </div>
+          <div class="form-group">
+            <div class="form-label">Comuna</div>
+            <input class="form-input" id="perf-com" value="${p.comuna}" oninput="actualizarAddr()">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">WhatsApp / Teléfono</div>
+          <input class="form-input" value="${p.telefono}">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Especialidades (selecciona las tuyas)</div>
+          <div class="especialidades-grid" id="esp-grid">${espTags}</div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Horario de atención</div>
+          <input class="form-input" value="Lun–Vie 8:30–18:30 · Sáb 9:00–14:00">
+        </div>
+      </div>
+      <button class="btn bbl" onclick="guardarPerfil()">💾 Guardar cambios</button>
+      <div style="height:6px"></div>
+      <button class="btn bout" onclick="closeModal('ph-taller');toast('ph-taller','🌐 Abriendo perfil público...')">🌐 Ver perfil público</button>`;
+  }
+
+  // ── FUNCIÓN 5: CREAR VEHÍCULO DESDE TALLER ────────────────────────────
+  if(key === 'crear-vehiculo-taller') {
+    return `
+      <div class="mtit">Crear vehículo</div>
+      <div class="msub">Agregar un vehículo nuevo a la base de patentes del taller.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+        <div class="form-group">
+          <div class="form-label">Patente</div>
+          <input class="form-input mono" id="nv-pat" placeholder="XXXX·00" maxlength="8" oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">Marca</div><input class="form-input" id="nv-marca" placeholder="Nissan"></div>
+          <div class="form-group"><div class="form-label">Modelo</div><input class="form-input" id="nv-modelo" placeholder="Hilux"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">Año</div><input class="form-input" id="nv-anio" type="number" placeholder="2020"></div>
+          <div class="form-group"><div class="form-label">Color</div><input class="form-input" id="nv-color" placeholder="Blanco"></div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Kms actuales</div>
+          <input class="form-input" id="nv-kms" type="number" placeholder="50000">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Aceite recomendado</div>
+          <select class="form-select" id="nv-aceite">
+            <option>5W30</option><option>10W40</option><option selected>15W40</option><option>20W50</option><option>0W20</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Dueño / Cliente</div>
+          <input class="form-input" id="nv-dueno" placeholder="Nombre del dueño">
+        </div>
+        <div class="form-group">
+          <div class="form-label">WhatsApp</div>
+          <input class="form-input" id="nv-wa" type="tel" placeholder="+56 9 XXXX XXXX">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Notas internas</div>
+          <textarea class="form-input" rows="2" placeholder="Ej: cliente prefiere repuestos originales..." style="resize:none"></textarea>
+        </div>
+      </div>
+      <button class="btn bbl" onclick="guardarVehiculoTaller()">🚗 Guardar vehículo</button>
+      <div style="height:6px"></div>
+      <button class="btn bgr" onclick="guardarYcrearOT()">📋 Guardar y crear OT ahora</button>`;
+  }
+
+  return m[key] || '';
+}
+
+// ── FUNCIÓN 1: CAMBIAR ESTADO OT ──────────────────────────────────────────
+const estadoConfig = {
+  pend: { cls:'pend', bdgCls:'bp', bdgTxt:'Pendiente aprobación', btnCls:'active-pend' },
+  prog: { cls:'prog', bdgCls:'bpr', bdgTxt:'En proceso', btnCls:'active-prog' },
+  wait: { cls:'wait', bdgCls:'bw', bdgTxt:'Esperando repuesto', btnCls:'active-wait' },
+  done: { cls:'done', bdgCls:'bd2', bdgTxt:'Listo — WA enviado ✓', btnCls:'active-done' }
+};
+
+function cambiarEstado(otId, btnEl, nuevoEstado) {
+  const otEl = document.getElementById('ot-'+otId);
+  const bdgEl = document.getElementById('bdg-'+otId);
+  const cfg = estadoConfig[nuevoEstado];
+  if(!otEl || !cfg) return;
+
+  // Actualiza clase del card
+  otEl.className = 'ot ' + cfg.cls;
+
+  // Actualiza badge
+  if(bdgEl) { bdgEl.className = 'bdg '+cfg.bdgCls; bdgEl.textContent = cfg.bdgTxt; }
+
+  // Actualiza botones activos
+  btnEl.closest('.ot-actions').querySelectorAll('.est-btn').forEach(b => {
+    b.classList.remove('active-pend','active-prog','active-wait','active-done');
+  });
+  btnEl.classList.add(cfg.btnCls);
+
+  // Muestra/oculta secciones de "Listo"
+  const fsalZone = document.getElementById('fsal-'+otId);
+  const boletaZone = otEl.querySelector('.btn.bamb')?.parentElement;
+
+  if(nuevoEstado === 'done') {
+    // Si no existe zona foto salida, crearla
+    if(!fsalZone) {
+      const zone = document.createElement('div');
+      zone.className = 'foto-salida-zone';
+      zone.id = 'fsal-'+otId;
+      zone.style.marginTop = '10px';
+      zone.innerHTML = `
+        <div class="fsal-top">
+          <div class="fsal-lbl">📸 Fotos de salida</div>
+          <span style="font-size:10px;color:rgba(0,214,143,0.6)">Documenta el estado al entregar</span>
+        </div>
+        <div class="fsal-grid" id="fsal-grid-${otId}">
+          <div class="fsal-add" onclick="addFotoSalida('${otId}')">📷<span>+ Agregar foto de salida</span></div>
+        </div>`;
+      otEl.appendChild(zone);
+    } else {
+      fsalZone.style.display = 'block';
+    }
+    // Botón boleta
+    if(!otEl.querySelector('.btn.bamb')) {
+      const boletaDiv = document.createElement('div');
+      boletaDiv.style.marginTop = '10px';
+      boletaDiv.innerHTML = `<button class="btn bamb" style="font-size:12px;padding:10px" onclick="showModal('ph-taller','boleta-${otId}')">🧾 Emitir boleta electrónica</button>`;
+      otEl.appendChild(boletaDiv);
+    }
+    toast('ph-taller', '✅ Estado actualizado — WA automático enviado al cliente');
+  } else {
+    if(fsalZone) fsalZone.style.display = 'none';
+    const bambBtn = otEl.querySelector('.btn.bamb');
+    if(bambBtn) bambBtn.parentElement.style.display = 'none';
+
+    const msgs = {
+      pend: '⏳ Estado: Pendiente de aprobación',
+      prog: '🔵 Estado actualizado: En proceso',
+      wait: '🔴 Estado: Esperando repuesto — cliente notificado'
+    };
+    toast('ph-taller', msgs[nuevoEstado] || 'Estado actualizado');
+  }
+}
+
+// ── FUNCIÓN 2: FOTO DE SALIDA ─────────────────────────────────────────────
+const fotosEmojisOut = ['🚗','🔍','🛞','🪟','💡','✨'];
+function addFotoSalida(otId) {
+  const grid = document.getElementById('fsal-grid-'+otId);
+  if(!grid) return;
+  const existentes = grid.querySelectorAll('.fsal-thumb').length;
+  if(existentes >= 4) { toast('ph-taller','Máximo 4 fotos de salida'); return; }
+  const thumb = document.createElement('div');
+  thumb.className = 'fsal-thumb';
+  thumb.textContent = fotosEmojisOut[existentes % fotosEmojisOut.length];
+  thumb.onclick = () => toast('ph-taller','Foto salida '+(existentes+1));
+  const addBtn = grid.querySelector('.fsal-add');
+  grid.insertBefore(thumb, addBtn);
+  toast('ph-taller','📷 Foto de salida '+(existentes+1)+' agregada');
+}
+
+// ── FUNCIÓN 4: PERFIL — helpers ───────────────────────────────────────────
+function toggleEsp(el, esp) {
+  el.classList.toggle('on');
+  const p = state.perfilTaller;
+  if(el.classList.contains('on')) {
+    if(!p.especialidades.includes(esp)) p.especialidades.push(esp);
+  } else {
+    p.especialidades = p.especialidades.filter(e => e !== esp);
+  }
+}
+function actualizarAddr() {
+  const dir = document.getElementById('perf-dir')?.value || '';
+  const com = document.getElementById('perf-com')?.value || '';
+  const prev = document.getElementById('prev-addr');
+  if(prev) prev.textContent = dir + (com ? ', '+com : '');
+}
+function guardarPerfil() {
+  const nombre = document.getElementById('perf-nombre')?.value;
+  if(nombre) state.perfilTaller.nombre = nombre;
+  closeModal('ph-taller');
+  toast('ph-taller','💾 Perfil actualizado — cambios visibles en Fixall');
+}
+
+// ── FUNCIÓN 5: GUARDAR VEHÍCULO TALLER ────────────────────────────────────
+function guardarVehiculoTaller() {
+  const pat = document.getElementById('nv-pat')?.value;
+  const marca = document.getElementById('nv-marca')?.value;
+  const modelo = document.getElementById('nv-modelo')?.value;
+  const dueno = document.getElementById('nv-dueno')?.value;
+  if(!pat || !marca) { toast('ph-taller','⚠️ Patente y marca son obligatorias'); return; }
+  closeModal('ph-taller');
+  // Agregar a la vista de patentes (demo)
+  toast('ph-taller','🚗 Vehículo '+pat.toUpperCase()+' agregado a la base de patentes');
+}
+function guardarYcrearOT() {
+  const pat = document.getElementById('nv-pat')?.value;
+  const marca = document.getElementById('nv-marca')?.value;
+  const modelo = document.getElementById('nv-modelo')?.value;
+  const dueno = document.getElementById('nv-dueno')?.value;
+  const wa = document.getElementById('nv-wa')?.value;
+  if(!pat || !marca) { toast('ph-taller','⚠️ Patente y marca son obligatorias'); return; }
+  // Pre-llenar formulario de OT
+  document.getElementById('ot-patente').value = pat.toUpperCase();
+  document.getElementById('ot-marca').value = marca;
+  document.getElementById('ot-modelo').value = modelo || '';
+  document.getElementById('ot-cliente').value = dueno || '';
+  document.getElementById('ot-wa').value = wa || '';
+  closeModal('ph-taller');
+  showT('nueva-ot', document.querySelector('#tabs-t .tab:nth-child(2)'));
+  toast('ph-taller','📋 Datos cargados — completa el trabajo y los repuestos');
+}
+
+// ── NUEVA OT ───────────────────────────────────────────────────────────────
+const vehiculosDB = {
+  'RV5249': { marca:'Nissan', modelo:'Pick Up D Cab 2.4', anio:'1998', kms:'187430', cliente:'Camilo Solís', wa:'+56 9 8331 8939' },
+  'FLWK45': { marca:'Toyota', modelo:'Hilux', anio:'2015', kms:'95000', cliente:'María González', wa:'+56 9 7712 3000' },
+  'BPRC12': { marca:'Chevrolet', modelo:'Spark', anio:'2018', kms:'62000', cliente:'Jorge Muñoz', wa:'+56 9 8821 4455' },
+};
+
+function buscarPatente(val) {
+  const key = val.replace(/[^A-Z0-9]/g,'').substring(0,7);
+  const veh = vehiculosDB[key];
+  const div = document.getElementById('autocompletado-vehiculo');
+  const txt = document.getElementById('autocompletado-txt');
+  if(veh && key.length >= 5) {
+    div.style.display='block';
+    txt.innerHTML = `<b>✓ Vehículo encontrado en historial</b><br>${veh.marca} ${veh.modelo} ${veh.anio} · Cliente: ${veh.cliente}`;
+    document.getElementById('ot-marca').value = veh.marca;
+    document.getElementById('ot-modelo').value = veh.modelo;
+    document.getElementById('ot-anio').value = veh.anio;
+    document.getElementById('ot-kms').value = veh.kms;
+    document.getElementById('ot-cliente').value = veh.cliente;
+    document.getElementById('ot-wa').value = veh.wa;
+  } else {
+    div.style.display='none';
+  }
+}
+
+function fmt(n) { return '$'+Math.round(n).toLocaleString('es-CL'); }
+
+function recalcular() {
+  const st = state.trabajos.reduce((a,t) => a+(parseFloat(t.precio)||0), 0);
+  const sr = state.repuestos.reduce((a,r) => a+(parseFloat(r.precio)||0)*(parseInt(r.qty)||1), 0);
+  const neto = st+sr; const iva = neto*0.19; const total = neto+iva;
+  document.getElementById('subtotal-trabajos').textContent = fmt(st);
+  document.getElementById('subtotal-repuestos').textContent = fmt(sr);
+  document.getElementById('monto-neto').textContent = fmt(neto);
+  document.getElementById('monto-iva').textContent = fmt(iva);
+  document.getElementById('monto-total').textContent = fmt(total);
+}
+
+function addTrabajo() {
+  const id = Date.now();
+  state.trabajos.push({id,nombre:'',precio:0});
+  const list = document.getElementById('trabajos-list');
+  const el = document.createElement('div');
+  el.className='item-row'; el.id='trab-'+id;
+  el.innerHTML=`<div class="item-info" style="display:flex;flex-direction:column;gap:6px;flex:1"><input class="form-input" placeholder="Descripción del trabajo" oninput="updateTrabajo(${id},'nombre',this.value)" style="padding:8px 10px;font-size:12px"><input class="form-input" type="number" placeholder="Precio ($)" oninput="updateTrabajo(${id},'precio',this.value)" style="padding:8px 10px;font-size:12px"></div><button class="item-del" onclick="removeTrabajo(${id})">✕</button>`;
+  list.appendChild(el);
+}
+function updateTrabajo(id,field,val){const t=state.trabajos.find(x=>x.id===id);if(t){t[field]=field==='precio'?parseFloat(val)||0:val;recalcular();}}
+function removeTrabajo(id){state.trabajos=state.trabajos.filter(x=>x.id!==id);document.getElementById('trab-'+id)?.remove();recalcular();}
+
+function addRepuesto() {
+  const id = Date.now();
+  state.repuestos.push({id,nombre:'',precio:0,qty:1});
+  const list = document.getElementById('repuestos-list');
+  const el = document.createElement('div');
+  el.className='item-row'; el.id='rep-'+id;
+  el.innerHTML=`<div class="item-info" style="display:flex;flex-direction:column;gap:6px;flex:1"><input class="form-input" placeholder="Nombre del repuesto" oninput="updateRepuesto(${id},'nombre',this.value)" style="padding:8px 10px;font-size:12px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:6px"><input class="form-input" type="number" placeholder="Precio unitario ($)" oninput="updateRepuesto(${id},'precio',this.value)" style="padding:8px 10px;font-size:12px"><input class="form-input" type="number" placeholder="Cantidad" value="1" oninput="updateRepuesto(${id},'qty',this.value)" style="padding:8px 10px;font-size:12px"></div></div><button class="item-del" onclick="removeRepuesto(${id})">✕</button>`;
+  list.appendChild(el);
+}
+function updateRepuesto(id,field,val){const r=state.repuestos.find(x=>x.id===id);if(r){r[field]=(field==='nombre')?val:parseFloat(val)||0;recalcular();}}
+function removeRepuesto(id){state.repuestos=state.repuestos.filter(x=>x.id!==id);document.getElementById('rep-'+id)?.remove();recalcular();}
+
+const fotosEmojis=['📷','🔩','⚙️','🔧','📐','🔍','💡','🛠️'];
+function addFoto(){
+  const grid=document.getElementById('fotos-grid');
+  const count=grid.querySelectorAll('.foto').length;
+  if(count>=4){toast('ph-taller','Máximo 4 fotos por OT');return;}
+  const el=document.createElement('div');
+  el.className='foto';
+  el.innerHTML=`<div class="fimg">${fotosEmojis[count%fotosEmojis.length]}</div><div class="fbody"><div class="ftit">Foto ${count+1}</div><div class="fsub">Diagnóstico adjunto</div></div>`;
+  el.onclick=()=>toast('ph-taller','Foto '+(count+1)+' del diagnóstico');
+  grid.insertBefore(el,grid.querySelector('.add-row'));
+  toast('ph-taller','📷 Foto '+(count+1)+' agregada');
+}
+
+function crearOT() {
+  const patente=document.getElementById('ot-patente').value;
+  const cliente=document.getElementById('ot-cliente').value;
+  const desc=document.getElementById('ot-desc').value;
+  if(!patente||!cliente){toast('ph-taller','⚠️ Completa la patente y el cliente');return;}
+  if(state.trabajos.length===0&&state.repuestos.length===0){toast('ph-taller','⚠️ Agrega al menos un trabajo o repuesto');return;}
+  const neto=state.trabajos.reduce((a,t)=>a+(t.precio||0),0)+state.repuestos.reduce((a,r)=>a+(r.precio||0)*(r.qty||1),0);
+  const total=Math.round(neto*1.19);
+  const num=state.otCount++;
+  const ots=document.getElementById('ots-list');
+  const el=document.createElement('div');
+  const slug=patente.replace(/[^A-Z0-9]/g,'').toLowerCase();
+  el.className='ot pend'; el.id='ot-new'+num;
+  el.innerHTML=`
+    <div class="ot-top"><div class="ot-pat">${patente.toUpperCase()}</div><div class="ot-amt">${fmt(total)}</div></div>
+    <div class="ot-desc">${desc||'Sin descripción'} · <span style="color:var(--amber);font-size:11px">⏳ Esperando aprobación WA</span></div>
+    <div class="ot-bot"><div class="ot-who">${cliente}</div><span class="bdg bp" id="bdg-new${num}">Pendiente aprobación</span></div>
+    <div class="ot-actions">
+      <span class="est-lbl">Estado:</span>
+      <button class="est-btn active-pend" onclick="cambiarEstado('new${num}',this,'pend')">⏳ Pendiente</button>
+      <button class="est-btn" onclick="cambiarEstado('new${num}',this,'prog')">🔵 En proceso</button>
+      <button class="est-btn" onclick="cambiarEstado('new${num}',this,'wait')">🔴 Esp. repuesto</button>
+      <button class="est-btn" onclick="cambiarEstado('new${num}',this,'done')">✅ Listo</button>
+    </div>`;
+  ots.prepend(el);
+  // Reset
+  ['ot-patente','ot-marca','ot-modelo','ot-anio','ot-kms','ot-cliente','ot-wa','ot-desc'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  document.getElementById('autocompletado-vehiculo').style.display='none';
+  document.getElementById('trabajos-list').innerHTML='';
+  document.getElementById('repuestos-list').innerHTML='';
+  document.getElementById('fotos-grid').innerHTML='<div class="add-row" onclick="addFoto()" style="height:80px;flex-direction:column;gap:6px;font-size:20px">📷<span style="font-size:11px">Agregar foto</span></div>';
+  state.trabajos=[];state.repuestos=[];
+  recalcular();
+  const enTaller=document.getElementById('stat-en-taller');
+  enTaller.textContent=parseInt(enTaller.textContent)+1;
+  toast('ph-taller','✅ OT #'+num+' creada — link enviado por WA a '+cliente);
+  setTimeout(()=>showT('inicio',document.querySelector('#tabs-t .tab:first-child')),1200);
+}
+
+// ── PRESUPUESTO CLIENTE ────────────────────────────────────────────────────
+function aprobarPresupuesto() {
+  document.getElementById('btns-aprobar').style.display='none';
+  document.getElementById('btn-wa-final').style.display='flex';
+  document.getElementById('apbanner').classList.add('on');
+  document.getElementById('presup-badge').className='bdg bd2';
+  document.getElementById('presup-badge').textContent='✓ Aprobado';
+  document.getElementById('apbanner').scrollIntoView({behavior:'smooth',block:'center'});
+  toast('ph-cliente','✅ Aprobado — el taller comenzará pronto');
+  document.getElementById('alerta-aprobacion')?.style && (document.getElementById('alerta-aprobacion').style.display='none');
+}
+function rechazarPresupuesto() {
+  document.getElementById('presup-badge').className='bdg bw';
+  document.getElementById('presup-badge').textContent='✗ Rechazado';
+  document.getElementById('btns-aprobar').style.display='none';
+  toast('ph-cliente','El taller fue notificado del rechazo');
+}
+
+function setPeriod(btn) {
+  btn.closest('.period').querySelectorAll('.pt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  toast('ph-taller','Actualizando métricas — '+btn.textContent);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  TS.forEach(s=>{const e=document.getElementById('t-'+s);if(e)e.style.display=s==='inicio'?'flex':'none';});
+  CS.forEach(s=>{const e=document.getElementById('c-'+s);if(e)e.style.display=s==='vehiculos'?'flex':'none';});
+  // FUNCIÓN 5: agregar botón "Crear vehículo" en la tab Patentes
+  const scrollT = document.getElementById('t-patentes');
+  if(scrollT) {
+    const btn = document.createElement('button');
+    btn.className = 'btn bout';
+    btn.innerHTML = '🚗 Crear vehículo nuevo';
+    btn.onclick = () => showModal('ph-taller','crear-vehiculo-taller');
+    const existingBtn = scrollT.querySelector('.btn.bbl');
+    if(existingBtn) scrollT.insertBefore(btn, existingBtn);
+    else scrollT.appendChild(btn);
+  }
+  setTimeout(()=>{
+    document.querySelectorAll('.rbf').forEach(el=>{const w=el.style.width;el.style.width='0';setTimeout(()=>el.style.width=w,150);});
+  },600);
+});
+</script>
+</body>
+</html>

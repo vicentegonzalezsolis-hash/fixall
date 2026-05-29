@@ -1,0 +1,9 @@
+{
+  "/patentes/page": "app/patentes/page.js",
+  "/patentes/[patente]/page": "app/patentes/[patente]/page.js",
+  "/reportes/page": "app/reportes/page.js",
+  "/inventario/page": "app/inventario/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/p/[token]/page": "app/p/[token]/page.js",
+  "/_not-found/page": "app/_not-found/page.js"
+}

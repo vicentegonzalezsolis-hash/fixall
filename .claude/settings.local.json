@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@14 . --typescript --tailwind --eslint --app --src-dir=false --import-alias=\"@/*\" --yes)",
+      "Bash(ls /usr/local/bin/ | grep -E \"node|npm|pnpm|bun\" ; ls /opt/homebrew/bin/ 2>/dev/null | grep -E \"node|npm|pnpm|bun\" ; ls ~/.nvm/versions/node/ 2>/dev/null | head -5)",
+      "Bash(find /opt /usr /home -name \"node\" -type f 2>/dev/null | head -5; ls /opt/ 2>/dev/null)",
+      "Bash(find /Users/vicenteleon -name \"node\" -type f 2>/dev/null | head -5; find /usr -name \"node\" -type f 2>/dev/null | head -5)"
+    ]
+  }
+}
