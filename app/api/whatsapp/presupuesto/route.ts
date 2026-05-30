@@ -16,7 +16,7 @@ export async function POST(req: Request) {
 
   if (!ot) return NextResponse.json({ error: "OT not found" }, { status: 404 });
 
-  const wa = (ot.vehiculo as { cliente_whatsapp: string })?.cliente_whatsapp;
+  const wa = (ot.vehiculo as unknown as { cliente_whatsapp: string })?.cliente_whatsapp;
   if (!wa) return NextResponse.json({ ok: false, reason: "no whatsapp" });
 
   const msg = buildPresupuestoMessage(
