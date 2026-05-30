@@ -20,8 +20,8 @@ export async function POST(req: Request) {
   if (!wa) return NextResponse.json({ ok: false, reason: "no whatsapp" });
 
   const msg = buildPresupuestoMessage(
-    (ot.taller as { nombre: string })?.nombre ?? "Fixall",
-    (ot.vehiculo as { patente: string })?.patente ?? "",
+    (ot.taller as unknown as { nombre: string })?.nombre ?? "Fixall",
+    (ot.vehiculo as unknown as { patente: string })?.patente ?? "",
     ot.numero_ot,
     ot.link_token
   );
