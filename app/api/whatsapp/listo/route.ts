@@ -1,32 +1,20 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
-import { sendWhatsApp, buildListoMessage } from "@/lib/twilio/sendWhatsApp";
+import { createClient } from "@/lib/supabase/server";
 
-export async function POST(req: Request) {
-  const { otId } = await req.json();
-  if (!otId) return NextResponse.json({ error: "otId required" }, { status: 400 });
-
-  const supabase = await createServiceClient();
-
+export async function POST(request: Request) {
+  const { ot_id } = await request.json();
+  const supabase = createClient();
   const { data: ot } = await supabase
     .from("ordenes_trabajo")
-    .select("numero_ot, vehiculo:vehiculos(patente, cliente_whatsapp), taller:talleres(nombre, direccion, comuna)")
-    .eq("id", otId)
+    .select("*, vehiculo:vehiculos(*), taller:talleres(*)")
+    .eq("id", ot_id)
     .single();
-
-  if (!ot) return NextResponse.json({ error: "OT not found" }, { status: 404 });
-
-  const wa = (ot.vehiculo as any as { cliente_whatsapp: string })?.cliente_whatsapp;
+  if (!ot) return NextResponse.json({ error: "OT no encontrada" }, { status: 404 });
+  const vehiculo = ot.vehiculo as any;
+  const taller = ot.taller as any;
+  const wa = vehiculo?.cliente_whatsapp;
   if (!wa) return NextResponse.json({ ok: false, reason: "no whatsapp" });
-
-  const taller = ot.taller as unknown as { nombre: string; direccion: string; comuna: string };
-  const msg = buildListoMessage(
-    taller?.nombre ?? "Fixall",
-    (ot.vehiculo as { patente: string })?.patente ?? "",
-    ot.numero_ot,
-    `${taller?.direccion}, ${taller?.comuna}`
-  );
-
-  const ok = await sendWhatsApp(wa, msg);
-  return NextResponse.json({ ok });
+  const msg = `✅ Tu vehículo ${vehiculo?.patente ?? ""} está listo para retirar en ${taller?.nombre ?? "el taller"}, ${taller?.direccion ?? ""}, ${taller?.comuna ?? ""}.`;
+  console.log("WA msg:", msg);
+  return NextResponse.json({ ok: true, msg });
 }
