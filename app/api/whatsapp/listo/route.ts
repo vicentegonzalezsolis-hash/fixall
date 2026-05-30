@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request: Request) {
   const { ot_id } = await request.json();
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: ot } = await supabase
     .from("ordenes_trabajo")
     .select("*, vehiculo:vehiculos(*), taller:talleres(*)")
@@ -15,6 +15,5 @@ export async function POST(request: Request) {
   const wa = vehiculo?.cliente_whatsapp;
   if (!wa) return NextResponse.json({ ok: false, reason: "no whatsapp" });
   const msg = `✅ Tu vehículo ${vehiculo?.patente ?? ""} está listo para retirar en ${taller?.nombre ?? "el taller"}, ${taller?.direccion ?? ""}, ${taller?.comuna ?? ""}.`;
-  console.log("WA msg:", msg);
   return NextResponse.json({ ok: true, msg });
 }
