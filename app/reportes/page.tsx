@@ -3,6 +3,12 @@ import { redirect } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import GraficoBarras from "./GraficoBarras";
 
+function formatCLPShort(n: number) {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
+  return `$${n}`;
+}
+
 function formatCLP(n: number) {
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
@@ -11,11 +17,6 @@ function formatCLP(n: number) {
   }).format(n);
 }
 
-function formatCLPShort(n: number) {
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
-  return `$${n}`;
-}
 
 export default async function ReportesPage() {
   const supabase = await createClient();
@@ -170,7 +171,7 @@ export default async function ReportesPage() {
           >
             Ingresos — últimos 6 meses
           </p>
-          <GraficoBarras data={mesesData} formatValue={formatCLPShort} />
+          <GraficoBarras data={mesesData} />
         </div>
 
         {/* ── MINI STATS ── */}

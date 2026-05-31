@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 
+function formatCLPShort(n: number): string {
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `$${Math.round(n / 1_000)}K`;
+  return `$${n}`;
+}
+
 interface BarData {
   label: string;
   ingresos: number;
@@ -10,10 +16,9 @@ interface BarData {
 
 interface Props {
   data: BarData[];
-  formatValue: (n: number) => string;
 }
 
-export default function GraficoBarras({ data, formatValue }: Props) {
+export default function GraficoBarras({ data }: Props) {
   const [active, setActive] = useState<number | null>(null);
 
   const maxVal = Math.max(...data.map(d => d.ingresos), 1);
@@ -148,7 +153,7 @@ export default function GraficoBarras({ data, formatValue }: Props) {
                       fill="white"
                       pointerEvents="none"
                     >
-                      {formatValue(d.ingresos)}
+                      {formatCLPShort(d.ingresos)}
                     </text>
                   </>
                 )}
@@ -197,7 +202,7 @@ export default function GraficoBarras({ data, formatValue }: Props) {
                 {data[active].ots} OT{data[active].ots !== 1 ? "s" : ""}
               </span>
               <span className="font-bold" style={{ color: "#1A6BFF" }}>
-                {data[active].ingresos > 0 ? formatValue(data[active].ingresos) : "Sin ingresos"}
+                {data[active].ingresos > 0 ? formatCLPShort(data[active].ingresos) : "Sin ingresos"}
               </span>
             </div>
           </div>
