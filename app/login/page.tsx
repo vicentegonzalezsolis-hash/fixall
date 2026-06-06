@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import Logo from "@/components/Logo";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -41,21 +42,7 @@ export default function LoginPage() {
 
         {/* ── LOGO DE MARCA ── */}
         <div className="mb-10 flex flex-col items-center gap-5">
-          {/* Wordmark */}
-          <div className="flex items-baseline">
-            <span
-              className="text-5xl font-extrabold tracking-tight leading-none"
-              style={{ color: "#fff", letterSpacing: "-0.03em" }}
-            >
-              Fix
-            </span>
-            <span
-              className="text-5xl font-extrabold tracking-tight leading-none"
-              style={{ color: "#1A6BFF", letterSpacing: "-0.03em" }}
-            >
-              all
-            </span>
-          </div>
+          <Logo size="lg" />
 
           {/* Tagline con divider */}
           <div className="flex items-center gap-3">

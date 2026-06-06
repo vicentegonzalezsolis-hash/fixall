@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import GraficoBarras from "./GraficoBarras";
+import Logo from "@/components/Logo";
 
 function formatCLPShort(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -111,6 +112,7 @@ export default async function ReportesPage() {
     <div className="pb-28 min-h-screen" style={{ background: "#0B0D14" }}>
       {/* Header */}
       <div className="px-4 pt-12 pb-5">
+        <Logo size="sm" className="mb-3" />
         <h1 className="text-xl font-extrabold text-white">Reportes</h1>
         <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.38)" }}>
           {mesNombre} {now.getFullYear()}

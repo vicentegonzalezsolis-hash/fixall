@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
+import Logo from "@/components/Logo";
 import { Suspense } from "react";
 
 function PerfilForm() {
@@ -72,19 +73,22 @@ function PerfilForm() {
 
   return (
     <div className="pb-24">
-      <div className="flex items-center gap-3 px-4 pt-12 pb-6">
-        {!isSetup && (
-          <Link href="/dashboard" className="w-9 h-9 rounded-xl bg-surface-2 flex items-center justify-center border border-border">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M11 4L6 9l5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </Link>
-        )}
-        <div>
-          <h1 className="text-lg font-bold">{isSetup ? "Configura tu taller" : "Perfil del taller"}</h1>
-          {isSetup && <p className="text-xs text-text-muted">Completa los datos para continuar</p>}
+      <div className="px-4 pt-12 pb-6">
+        <Logo size="sm" className="mb-4" />
+        <div className="flex items-center gap-3">
+          {!isSetup && (
+            <Link href="/dashboard" className="w-9 h-9 rounded-xl bg-surface-2 flex items-center justify-center border border-border shrink-0">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M11 4L6 9l5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </Link>
+          )}
+            <div>
+              <h1 className="text-lg font-bold">{isSetup ? "Configura tu taller" : "Perfil del taller"}</h1>
+              {isSetup && <p className="text-xs text-text-muted">Completa los datos para continuar</p>}
+            </div>
+          </div>
         </div>
-      </div>
 
       <form onSubmit={handleSubmit} className="px-4 space-y-5">
         <div className="card space-y-4">

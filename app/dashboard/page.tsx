@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import OTCard from "@/components/OTCard";
+import Logo from "@/components/Logo";
 import { OrdenTrabajo } from "@/types/database";
 
 function formatCLP(n: number) {
@@ -62,20 +63,20 @@ export default async function DashboardPage() {
           style={{ background: "radial-gradient(circle, rgba(26,107,255,0.1) 0%, transparent 65%)" }}
         />
         <div className="flex items-center justify-between relative z-10">
-          <div>
-            <p className="text-xs font-medium mb-0.5" style={{ color: "rgba(255,255,255,0.38)" }}>
-              {saludo} 👋
-            </p>
-            <h1 className="text-xl font-extrabold text-white leading-tight">{taller.nombre}</h1>
-            <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.28)" }}>
-              {taller.comuna}
-            </p>
+          <div className="flex flex-col gap-2">
+            <Logo size="sm" />
+            <div>
+              <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.38)" }}>
+                {saludo} 👋 · {taller.comuna}
+              </p>
+              <p className="text-sm font-bold text-white leading-tight">{taller.nombre}</p>
+            </div>
           </div>
 
           {/* Avatar — sin glow */}
           <Link
             href="/perfil"
-            className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-base text-white"
+            className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-base"
             style={{
               background: "rgba(26,107,255,0.18)",
               border: "1px solid rgba(26,107,255,0.25)",

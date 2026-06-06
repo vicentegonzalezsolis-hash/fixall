@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
+import Logo from "@/components/Logo";
 
 export default async function PatentesPage() {
   const supabase = await createClient();
@@ -19,9 +20,12 @@ export default async function PatentesPage() {
 
   return (
     <div className="pb-24">
-      <div className="flex items-center justify-between px-4 pt-12 pb-4">
-        <h1 className="text-xl font-bold">Vehículos</h1>
-        <Link href="/patentes/nueva" className="btn-primary text-sm px-4 py-2">+ Nuevo</Link>
+      <div className="px-4 pt-12 pb-4">
+        <Logo size="sm" className="mb-3" />
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">Vehículos</h1>
+          <Link href="/patentes/nueva" className="btn-primary text-sm px-4 py-2">+ Nuevo</Link>
+        </div>
       </div>
 
       <div className="px-4 space-y-3">
