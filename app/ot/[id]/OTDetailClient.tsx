@@ -43,7 +43,10 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
 
   const fotosD = fotos.filter(f => f.tipo === "diagnostico");
   const fotosS = fotos.filter(f => f.tipo === "salida");
-  const presupuestoUrl = `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/p/${ot.link_token}`;
+  const appBase =
+    process.env.NEXT_PUBLIC_APP_URL ||
+    (typeof window !== "undefined" ? window.location.origin : "");
+  const presupuestoUrl = `${appBase}/p/${ot.link_token}`;
 
   // Buscar en inventario cuando tipo = repuesto y hay texto
   useEffect(() => {

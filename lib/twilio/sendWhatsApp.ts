@@ -29,7 +29,8 @@ export function buildPresupuestoMessage(
   numeroOT: number,
   token: string
 ): string {
-  const url = `${process.env.NEXT_PUBLIC_APP_URL}/p/${token}`;
+  const appBase = process.env.NEXT_PUBLIC_APP_URL || "https://fixall.vercel.app";
+  const url = `${appBase}/p/${token}`;
   return (
     `🔧 *${tallerNombre}* — OT #${numeroOT}\n\n` +
     `Hola! Hemos recibido tu vehículo *${patente}* y ya tenemos el diagnóstico listo.\n\n` +
