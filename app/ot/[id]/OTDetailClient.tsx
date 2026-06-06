@@ -43,9 +43,12 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
 
   const fotosD = fotos.filter(f => f.tipo === "diagnostico");
   const fotosS = fotos.filter(f => f.tipo === "salida");
+
+  // Siempre usar dominio completo: env var de build > origin real del browser
+  // Se evalúa en render (browser), así window.location.origin nunca es undefined
   const appBase =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    (typeof window !== "undefined" ? window.location.origin : "");
+    (typeof process !== "undefined" && process.env.NEXT_PUBLIC_APP_URL) ||
+    window.location.origin;
   const presupuestoUrl = `${appBase}/p/${ot.link_token}`;
 
   // Buscar en inventario cuando tipo = repuesto y hay texto
@@ -246,7 +249,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
               className="flex-1 rounded-xl px-3 py-2 text-xs font-mono truncate"
               style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }}
             >
-              /p/{ot.link_token?.slice(0, 16)}…
+              {presupuestoUrl.replace(/^https?:\/\//, "").slice(0, 32)}…
             </div>
             <button
               onClick={sharePresupuesto}
