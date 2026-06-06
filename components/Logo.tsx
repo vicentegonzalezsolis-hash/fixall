@@ -20,11 +20,6 @@ export default function Logo({ size = "md", className = "" }: Props) {
         width: w,
         height: h,
         flexShrink: 0,
-        // screen blend: el fondo azul marino del PNG se funde con el dark bg
-        // y el texto blanco queda visible
-        mixBlendMode: "screen",
-        // Ligero brillo para que el blanco sea nítido
-        filter: "brightness(1.15)",
       }}
     >
       <Image
@@ -32,7 +27,13 @@ export default function Logo({ size = "md", className = "" }: Props) {
         alt="Fixall"
         width={w}
         height={h}
-        style={{ objectFit: "contain", display: "block" }}
+        style={{
+          objectFit: "contain",
+          display: "block",
+          // Convierte cualquier color a negro (brightness 0),
+          // luego invierte a blanco puro — fondo desaparece, texto queda blanco
+          filter: "brightness(0) invert(1)",
+        }}
         priority
       />
     </div>
