@@ -20,25 +20,13 @@ const NAV = [
     href: "/patentes",
     label: "Vehículos",
     icon: (
-      // Auto de perfil limpio: capó + cabina + ruedas bien proporcionadas
-      <svg width="24" height="22" viewBox="0 0 24 22" fill="none">
-        <path
-          d="M5.5 10.5L7.5 5.5C7.83 4.62 8.67 4 9.6 4h4.8c.93 0 1.77.62 2.1 1.5l2 5"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <rect x="2" y="10" width="20" height="6.5" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
-        <path d="M2 13h20" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <circle cx="7" cy="17.5" r="2" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="17" cy="17.5" r="2" stroke="currentColor" strokeWidth="1.5" />
-        {/* ventanas */}
-        <path
-          d="M9 10.5h2.5V8h-1.3a1 1 0 00-.9.6L9 10.5zM13 10.5h2l-.8-2a1 1 0 00-.9-.6H13v2.6z"
-          fill="currentColor"
-          fillOpacity="0.35"
-        />
+      // Lucide "Car" icon
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M19 17H5v2a1 1 0 001 1h12a1 1 0 001-1v-2z" />
+        <path d="M5 17l-1.5-6h15L17 17" />
+        <path d="M8 11l1.5-5h5L16 11" />
+        <circle cx="7.5" cy="17" r="1.5" fill="currentColor" stroke="none" />
+        <circle cx="16.5" cy="17" r="1.5" fill="currentColor" stroke="none" />
       </svg>
     ),
   },
