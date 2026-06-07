@@ -49,9 +49,6 @@ export default async function DashboardPage() {
     .filter("stock_actual", "lte", "stock_minimo")
     .limit(3);
 
-  const hora = new Date().getHours();
-  const saludo = hora < 12 ? "Buenos días" : hora < 20 ? "Buenas tardes" : "Buenas noches";
-
   return (
     <div className="pb-28 min-h-screen" style={{ background: "#0B0D14" }}>
 
@@ -63,17 +60,13 @@ export default async function DashboardPage() {
           style={{ background: "radial-gradient(circle, rgba(26,107,255,0.1) 0%, transparent 65%)" }}
         />
         <div className="flex items-center justify-between relative z-10">
-          <div className="flex flex-col gap-2">
+          {/* Logo + nombre del taller en la misma línea, sin margen extra */}
+          <div className="flex items-center gap-3">
             <Logo size="sm" />
-            <div>
-              <p className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.38)" }}>
-                {saludo} 👋 · {taller.comuna}
-              </p>
-              <p className="text-sm font-bold text-white leading-tight">{taller.nombre}</p>
-            </div>
+            <p className="text-sm font-bold text-white leading-tight">{taller.nombre}</p>
           </div>
 
-          {/* Avatar — sin glow */}
+          {/* Avatar centrado verticalmente */}
           <Link
             href="/perfil"
             className="w-11 h-11 rounded-2xl flex items-center justify-center font-bold text-base"
