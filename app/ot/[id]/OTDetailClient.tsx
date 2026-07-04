@@ -41,8 +41,9 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
   const [selectedInvId, setSelectedInvId] = useState<string | null>(null);
   const debounceRef = useRef<NodeJS.Timeout>();
 
-  const fotosD = fotos.filter(f => f.tipo === "diagnostico");
-  const fotosS = fotos.filter(f => f.tipo === "salida");
+  const fotosRecepcion = fotos.filter(f => f.tipo === "recepcion");
+  const fotosProceso = fotos.filter(f => f.tipo === "proceso");
+  const fotosEntrega = fotos.filter(f => f.tipo === "entrega");
 
   // Siempre usar dominio completo: env var de build > origin real del browser
   // Se evalúa en render (browser), así window.location.origin nunca es undefined
@@ -482,28 +483,38 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
           )}
         </div>
 
-        {/* Fotos diagnóstico */}
+        {/* Fotos recepción */}
         <div className="card">
           <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
-            Fotos de diagnóstico ({fotosD.length}/4)
+            Recepción ({fotosRecepcion.length}/4)
           </p>
-          {fotosD.length > 0 && (
-            <div className="mb-3"><FotoGrid fotos={fotosD} onDelete={deleteFoto} /></div>
+          {fotosRecepcion.length > 0 && (
+            <div className="mb-3"><FotoGrid fotos={fotosRecepcion} onDelete={deleteFoto} /></div>
           )}
-          <FotoUploader otId={ot.id} tipo="diagnostico" count={fotosD.length} onUploaded={refreshFotos} />
+          <FotoUploader otId={ot.id} tipo="recepcion" count={fotosRecepcion.length} onUploaded={refreshFotos} />
         </div>
 
-        {(ot.estado === "listo" || ot.estado === "cerrado") && (
-          <div className="card">
-            <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
-              Fotos de salida ({fotosS.length}/4)
-            </p>
-            {fotosS.length > 0 && (
-              <div className="mb-3"><FotoGrid fotos={fotosS} onDelete={deleteFoto} /></div>
-            )}
-            <FotoUploader otId={ot.id} tipo="salida" count={fotosS.length} onUploaded={refreshFotos} />
-          </div>
-        )}
+        {/* Fotos en proceso */}
+        <div className="card">
+          <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
+            En proceso ({fotosProceso.length}/4)
+          </p>
+          {fotosProceso.length > 0 && (
+            <div className="mb-3"><FotoGrid fotos={fotosProceso} onDelete={deleteFoto} /></div>
+          )}
+          <FotoUploader otId={ot.id} tipo="proceso" count={fotosProceso.length} onUploaded={refreshFotos} />
+        </div>
+
+        {/* Fotos entrega */}
+        <div className="card">
+          <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">
+            Entrega ({fotosEntrega.length}/4)
+          </p>
+          {fotosEntrega.length > 0 && (
+            <div className="mb-3"><FotoGrid fotos={fotosEntrega} onDelete={deleteFoto} /></div>
+          )}
+          <FotoUploader otId={ot.id} tipo="entrega" count={fotosEntrega.length} onUploaded={refreshFotos} />
+        </div>
 
         {ot.estado !== "cerrado" && (
           <button

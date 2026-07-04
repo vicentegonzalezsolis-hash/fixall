@@ -6,7 +6,7 @@ export type EstadoOT =
   | "cerrado";
 
 export type TipoItem = "trabajo" | "repuesto";
-export type TipoFoto = "diagnostico" | "salida";
+export type TipoFoto = "recepcion" | "proceso" | "entrega";
 
 export interface Taller {
   id: string;
@@ -97,5 +97,5 @@ export interface PresupuestoPublico {
   vehiculo: Pick<Vehiculo, "patente" | "marca" | "modelo" | "anio" | "color" | "kms_actuales" | "cliente_nombre">;
   ot: Pick<OrdenTrabajo, "id" | "numero_ot" | "descripcion_problema" | "estado" | "monto_total" | "monto_neto" | "monto_iva" | "aprobado_por_cliente" | "aprobado_at" | "created_at">;
   items: ItemOT[];
-  fotos_diagnostico: FotoOT[];
+  fotos_recepcion: FotoOT[];
 }

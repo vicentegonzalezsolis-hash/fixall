@@ -23,7 +23,7 @@ export default function PresupuestoClient({ ot: initialOt, taller }: Props) {
   );
   const [lightbox, setLightbox] = useState<string | null>(null);
 
-  const fotosD = ot.fotos.filter(f => f.tipo === "diagnostico");
+  const fotosRecepcion = ot.fotos.filter(f => f.tipo === "recepcion");
   const trabajos = ot.items.filter(i => i.tipo === "trabajo");
   const repuestos = ot.items.filter(i => i.tipo === "repuesto");
 
@@ -96,12 +96,12 @@ export default function PresupuestoClient({ ot: initialOt, taller }: Props) {
           <p className="text-sm text-white">{ot.descripcion_problema}</p>
         </div>
 
-        {/* Fotos diagnóstico */}
-        {fotosD.length > 0 && (
+        {/* Fotos recepción */}
+        {fotosRecepcion.length > 0 && (
           <div>
-            <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Fotos del diagnóstico</p>
+            <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Fotos de recepción</p>
             <div className="grid grid-cols-2 gap-2">
-              {fotosD.map(f => (
+              {fotosRecepcion.map(f => (
                 <div
                   key={f.id}
                   className="relative rounded-xl overflow-hidden aspect-square bg-surface-2 cursor-pointer"
