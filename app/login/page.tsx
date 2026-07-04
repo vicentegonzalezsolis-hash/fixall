@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import Logo from "@/components/Logo";
 import { Mail, Check } from "lucide-react";
+
+const FEATURES = [
+  "Órdenes de trabajo digitales",
+  "Presupuestos al cliente en 1 click",
+  "Control de inventario en tiempo real",
+  "Reportes de ingresos mensuales",
+];
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -26,61 +32,69 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-bg overflow-hidden relative">
-      {/* Glow orbs */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="fixed inset-0 flex items-center justify-center p-4" style={{ background: "#0D0D0D" }}>
+      <div
+        className="w-full md:max-w-[860px] flex flex-col-reverse md:flex-row overflow-hidden"
+        style={{ borderRadius: 20, border: "1px solid #1a2a3a" }}
+      >
+        {/* ── COLUMNA IZQUIERDA (info) — 45% ── */}
         <div
-          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(103,186,244,0.16) 0%, transparent 68%)" }}
-        />
-        <div
-          className="absolute bottom-0 right-0 w-[220px] h-[220px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)" }}
-        />
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center px-6 pt-16 pb-8 relative z-10">
-
-        {/* ── LOGO DE MARCA ── */}
-        <div className="mb-10 flex flex-col items-center gap-5">
-          <Logo size="lg" />
-
-          {/* Tagline con divider */}
-          <div className="flex items-center gap-3">
-            <div className="h-px w-10" style={{ background: "#1a2a3a" }} />
-            <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "#555555" }}>
-              Gestión de talleres
+          className="w-full md:w-[45%] p-8 md:p-9 flex flex-col justify-between gap-8"
+          style={{ background: "#1E466B" }}
+        >
+          <div>
+            <p style={{ fontSize: 26, fontWeight: 900, lineHeight: 1 }}>
+              <span style={{ color: "#FAFAFA" }}>Fix</span>
+              <span style={{ color: "#67BAF4" }}>all</span>
             </p>
-            <div className="h-px w-10" style={{ background: "#1a2a3a" }} />
+
+            <p className="mt-6" style={{ fontSize: 28, fontWeight: 800, lineHeight: 1.2 }}>
+              <span style={{ color: "#FAFAFA" }}>Tu taller,</span>
+              <br />
+              <span style={{ color: "#67BAF4" }}>bajo control.</span>
+            </p>
+
+            <ul className="mt-7 space-y-3">
+              {FEATURES.map((f) => (
+                <li key={f} className="flex items-center gap-2.5">
+                  <span
+                    className="shrink-0"
+                    style={{ width: 6, height: 6, borderRadius: 9999, background: "#67BAF4" }}
+                  />
+                  <span style={{ color: "rgba(250,250,250,0.75)", fontSize: 13 }}>{f}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+
+          <p
+            className="uppercase tracking-widest"
+            style={{ color: "rgba(103,186,244,0.5)", fontSize: 11 }}
+          >
+            Para talleres mecánicos
+          </p>
         </div>
 
-        {/* ── CARD ── */}
-        <div
-          className="w-full rounded-3xl p-6"
-          style={{
-            background: "#111827",
-            border: "1px solid #1a2a3a",
-          }}
-        >
+        {/* ── COLUMNA DERECHA (formulario) — 55% ── */}
+        <div className="w-full md:w-[55%] p-8 md:p-10 flex flex-col justify-center" style={{ background: "#0D0D0D" }}>
           {!sent ? (
             <>
-              <h2 className="text-xl font-bold mb-1" style={{ color: "#FAFAFA" }}>Iniciar sesión</h2>
-              <p className="text-sm mb-6" style={{ color: "#555555" }}>
-                Te enviamos un link de acceso instantáneo a tu email
+              <h1 style={{ color: "#FAFAFA", fontSize: 22, fontWeight: 800 }}>Iniciar sesión</h1>
+              <p className="mt-1.5 mb-6" style={{ color: "#555555", fontSize: 13 }}>
+                Te enviamos un link de acceso a tu email
               </p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label
-                    className="block text-xs font-semibold mb-2 uppercase tracking-widest"
-                    style={{ color: "#555555" }}
+                    className="block uppercase tracking-widest mb-2"
+                    style={{ color: "#888888", fontSize: 11, fontWeight: 600 }}
                   >
                     Email del taller
                   </label>
                   <div
-                    className="relative rounded-xl overflow-hidden"
-                    style={{ background: "#111827", border: "1px solid #1a2a3a" }}
+                    className="relative overflow-hidden"
+                    style={{ background: "#111827", border: "1px solid #1a2a3a", borderRadius: 12 }}
                   >
                     <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
                       <Mail size={15} color="#555555" strokeWidth={1.4} />
@@ -114,8 +128,15 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || !email}
-                  className="w-full py-3.5 rounded-xl text-sm font-bold active:scale-[0.98] transition-transform disabled:opacity-50"
-                  style={{ background: "#1E466B", color: "#67BAF4" }}
+                  className="w-full py-3.5 active:scale-[0.98] transition-transform disabled:opacity-50"
+                  style={{
+                    background: "#1E466B",
+                    border: "1.5px solid #67BAF4",
+                    borderRadius: 12,
+                    color: "#67BAF4",
+                    fontWeight: 700,
+                    fontSize: 14,
+                  }}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -127,6 +148,10 @@ export default function LoginPage() {
                   )}
                 </button>
               </form>
+
+              <p className="text-center mt-4" style={{ color: "#555555", fontSize: 12 }}>
+                Sin contraseñas. Acceso instantáneo por email.
+              </p>
             </>
           ) : (
             <div className="text-center py-2">
@@ -161,37 +186,7 @@ export default function LoginPage() {
             </div>
           )}
         </div>
-
-        {/* ── FEATURES ── */}
-        <div className="mt-7 grid grid-cols-3 gap-2.5 w-full">
-          {[
-            { icon: "🔧", label: "OTs digitales" },
-            { icon: "📱", label: "Aprobación online" },
-            { icon: "💬", label: "Aviso WhatsApp" },
-          ].map((f) => (
-            <div
-              key={f.label}
-              className="rounded-2xl p-3 text-center"
-              style={{
-                background: "#111827",
-                border: "1px solid #1a2a3a",
-              }}
-            >
-              <p className="text-lg mb-1">{f.icon}</p>
-              <p
-                className="text-[10px] font-semibold leading-tight"
-                style={{ color: "#555555" }}
-              >
-                {f.label}
-              </p>
-            </div>
-          ))}
-        </div>
       </div>
-
-      <p className="text-center text-[11px] pb-8 relative z-10" style={{ color: "#555555" }}>
-        Solo para talleres registrados en Fixall
-      </p>
     </div>
   );
 }

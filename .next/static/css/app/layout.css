@@ -529,9 +529,6 @@ video {
 .inset-0{
   inset: 0px;
 }
-.-top-32{
-  top: -8rem;
-}
 .bottom-0{
   bottom: 0px;
 }
@@ -540,9 +537,6 @@ video {
 }
 .left-3\.5{
   left: 0.875rem;
-}
-.right-0{
-  right: 0px;
 }
 .right-2{
   right: 0.5rem;
@@ -558,9 +552,6 @@ video {
 }
 .top-full{
   top: 100%;
-}
-.z-10{
-  z-index: 10;
 }
 .z-20{
   z-index: 20;
@@ -586,9 +577,6 @@ video {
 }
 .mb-1\.5{
   margin-bottom: 0.375rem;
-}
-.mb-10{
-  margin-bottom: 2.5rem;
 }
 .mb-2{
   margin-bottom: 0.5rem;
@@ -631,6 +619,12 @@ video {
 }
 .mt-3{
   margin-top: 0.75rem;
+}
+.mt-4{
+  margin-top: 1rem;
+}
+.mt-6{
+  margin-top: 1.5rem;
 }
 .mt-7{
   margin-top: 1.75rem;
@@ -704,15 +698,6 @@ video {
 .h-9{
   height: 2.25rem;
 }
-.h-\[220px\]{
-  height: 220px;
-}
-.h-\[340px\]{
-  height: 340px;
-}
-.h-px{
-  height: 1px;
-}
 .min-h-\[100px\]{
   min-height: 100px;
 }
@@ -751,12 +736,6 @@ video {
 }
 .w-9{
   width: 2.25rem;
-}
-.w-\[220px\]{
-  width: 220px;
-}
-.w-\[340px\]{
-  width: 340px;
 }
 .w-full{
   width: 100%;
@@ -808,6 +787,9 @@ video {
 .flex-col{
   flex-direction: column;
 }
+.flex-col-reverse{
+  flex-direction: column-reverse;
+}
 .flex-wrap{
   flex-wrap: wrap;
 }
@@ -847,8 +829,8 @@ video {
 .gap-3{
   gap: 0.75rem;
 }
-.gap-5{
-  gap: 1.25rem;
+.gap-8{
+  gap: 2rem;
 }
 .gap-y-2\.5{
   row-gap: 0.625rem;
@@ -896,9 +878,6 @@ video {
 }
 .rounded-2xl{
   border-radius: 20px;
-}
-.rounded-3xl{
-  border-radius: 24px;
 }
 .rounded-full{
   border-radius: 9999px;
@@ -1024,9 +1003,6 @@ video {
 }
 .p-10{
   padding: 2.5rem;
-}
-.p-3{
-  padding: 0.75rem;
 }
 .p-3\.5{
   padding: 0.875rem;
@@ -1164,9 +1140,6 @@ video {
 .pt-12{
   padding-top: 3rem;
 }
-.pt-16{
-  padding-top: 4rem;
-}
 .pt-2{
   padding-top: 0.5rem;
 }
@@ -1259,9 +1232,6 @@ video {
 }
 .leading-tight{
   line-height: 1.25;
-}
-.tracking-\[0\.2em\]{
-  letter-spacing: 0.2em;
 }
 .tracking-wide{
   letter-spacing: 0.025em;
@@ -1575,5 +1545,32 @@ input::placeholder, textarea::placeholder {
 
 .group:hover .group-hover\:opacity-100{
   opacity: 1;
+}
+
+@media (min-width: 768px){
+
+  .md\:w-\[45\%\]{
+    width: 45%;
+  }
+
+  .md\:w-\[55\%\]{
+    width: 55%;
+  }
+
+  .md\:max-w-\[860px\]{
+    max-width: 860px;
+  }
+
+  .md\:flex-row{
+    flex-direction: row;
+  }
+
+  .md\:p-10{
+    padding: 2.5rem;
+  }
+
+  .md\:p-9{
+    padding: 2.25rem;
+  }
 }
 
