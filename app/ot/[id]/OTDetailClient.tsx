@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import EstadoBadge from "@/components/EstadoBadge";
 import FotoGrid from "@/components/FotoGrid";
@@ -189,15 +190,13 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
         <Link
           href="/dashboard"
           className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-          style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+          style={{ background: "#111827", border: "1px solid #1a2a3a" }}
         >
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M11 4L6 9l5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronLeft size={18} color="#FAFAFA" strokeWidth={1.8} />
         </Link>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-mono" style={{ color: "rgba(255,255,255,0.35)" }}>OT #{ot.numero_ot}</p>
-          <h1 className="text-lg font-bold truncate">
+          <p className="text-xs font-mono" style={{ color: "#555555" }}>OT #{ot.numero_ot}</p>
+          <h1 className="text-lg font-bold truncate" style={{ color: "#FAFAFA" }}>
             {ot.vehiculo?.patente} — {ot.vehiculo?.marca} {ot.vehiculo?.modelo}
           </h1>
         </div>
@@ -229,7 +228,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                 onClick={() => cambiarEstado(e)}
                 disabled={loading}
                 className="px-3 py-1.5 rounded-lg text-xs font-semibold text-white active:scale-95 transition-all"
-                style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                style={{ background: "#111827", border: "1px solid #1a2a3a" }}
               >
                 {ESTADO_LABEL[e]}
               </button>
@@ -242,20 +241,20 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Presupuesto cliente</p>
             {ot.aprobado_por_cliente && (
-              <span className="text-xs font-bold" style={{ color: "#00D68F" }}>✓ Aprobado</span>
+              <span className="text-xs font-bold" style={{ color: "#10B981" }}>✓ Aprobado</span>
             )}
           </div>
           <div className="flex gap-2">
             <div
               className="flex-1 rounded-xl px-3 py-2 text-xs font-mono truncate"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }}
+              style={{ background: "#111827", border: "1px solid #1a2a3a", color: "#555555" }}
             >
               {presupuestoUrl.replace(/^https?:\/\//, "").slice(0, 32)}…
             </div>
             <button
               onClick={sharePresupuesto}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-white"
-              style={{ background: "linear-gradient(135deg, #1A6BFF 0%, #0052e0 100%)" }}
+              className="px-4 py-2 rounded-xl text-xs font-bold"
+              style={{ background: "#1E466B", color: "#67BAF4" }}
             >
               Compartir
             </button>
@@ -270,7 +269,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
               <button
                 onClick={() => setAddingItem(true)}
                 className="text-xs font-bold"
-                style={{ color: "#1A6BFF" }}
+                style={{ color: "#67BAF4" }}
               >
                 + Agregar
               </button>
@@ -278,7 +277,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
           </div>
 
           {items.length === 0 && !addingItem && (
-            <p className="text-sm py-2" style={{ color: "rgba(255,255,255,0.3)" }}>Sin ítems aún</p>
+            <p className="text-sm py-2" style={{ color: "#555555" }}>Sin ítems aún</p>
           )}
 
           <div className="space-y-2">
@@ -288,21 +287,21 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                   className="text-xs px-2 py-0.5 rounded-lg font-medium shrink-0"
                   style={
                     item.tipo === "trabajo"
-                      ? { background: "rgba(26,107,255,0.12)", color: "#1A6BFF" }
-                      : { background: "rgba(255,176,32,0.12)", color: "#FFB020" }
+                      ? { background: "rgba(103,186,244,0.12)", color: "#67BAF4" }
+                      : { background: "rgba(245,158,11,0.12)", color: "#F59E0B" }
                   }
                 >
                   {item.tipo === "trabajo" ? "Trabajo" : "Repuesto"}
                 </span>
                 <span className="flex-1 text-sm text-white truncate">{item.descripcion}</span>
-                <span className="text-sm shrink-0" style={{ color: "rgba(255,255,255,0.4)" }}>{item.cantidad}×</span>
+                <span className="text-sm shrink-0" style={{ color: "#555555" }}>{item.cantidad}×</span>
                 <span className="text-sm font-semibold text-white shrink-0">{formatCLP(item.subtotal)}</span>
                 <button
                   onClick={() => deleteItem(item.id)}
                   className="ml-1"
-                  style={{ color: "rgba(255,255,255,0.25)" }}
-                  onMouseEnter={e => (e.currentTarget.style.color = "#FF4757")}
-                  onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.25)")}
+                  style={{ color: "#555555" }}
+                  onMouseEnter={e => (e.currentTarget.style.color = "#EF4444")}
+                  onMouseLeave={e => (e.currentTarget.style.color = "#555555")}
                 >
                   <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
                     <path d="M1.5 1.5l10 10M11.5 1.5l-10 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
@@ -316,7 +315,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
           {addingItem && (
             <div
               className="mt-3 pt-4 space-y-3"
-              style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+              style={{ borderTop: "1px solid #1a2a3a" }}
             >
               {/* Selector tipo */}
               <div className="flex gap-2">
@@ -329,9 +328,9 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                     style={
                       newTipo === t
                         ? t === "trabajo"
-                          ? { background: "rgba(26,107,255,0.15)", border: "1px solid rgba(26,107,255,0.35)", color: "#1A6BFF" }
-                          : { background: "rgba(255,176,32,0.15)", border: "1px solid rgba(255,176,32,0.35)", color: "#FFB020" }
-                        : { background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.35)" }
+                          ? { background: "rgba(103,186,244,0.15)", border: "1px solid rgba(103,186,244,0.35)", color: "#67BAF4" }
+                          : { background: "rgba(245,158,11,0.15)", border: "1px solid rgba(245,158,11,0.35)", color: "#F59E0B" }
+                        : { background: "#111827", border: "1px solid #1a2a3a", color: "#555555" }
                     }
                   >
                     {t === "trabajo" ? "🔧 Trabajo" : "📦 Repuesto"}
@@ -355,7 +354,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                 {selectedInvId && (
                   <span
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold px-1.5 py-0.5 rounded-md"
-                    style={{ background: "rgba(0,214,143,0.12)", color: "#00D68F" }}
+                    style={{ background: "rgba(16,185,129,0.12)", color: "#10B981" }}
                   >
                     ✓ del inventario
                   </span>
@@ -365,7 +364,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                 {showInvDrop && invSugerencias.length > 0 && (
                   <div
                     className="absolute z-30 top-full mt-1.5 w-full rounded-xl overflow-hidden shadow-2xl"
-                    style={{ background: "#1A1D2E", border: "1px solid rgba(255,255,255,0.08)" }}
+                    style={{ background: "#111827", border: "1px solid #1a2a3a" }}
                   >
                     {invSugerencias.map(item => {
                       const bajo = item.stock_actual <= item.stock_minimo;
@@ -380,19 +379,19 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                             <p className="text-sm font-semibold text-white truncate">{item.nombre}</p>
                             <div className="flex items-center gap-2 mt-0.5">
                               {item.codigo_ref && (
-                                <span className="text-[10px] font-mono" style={{ color: "rgba(255,255,255,0.3)" }}>
+                                <span className="text-[10px] font-mono" style={{ color: "#555555" }}>
                                   {item.codigo_ref}
                                 </span>
                               )}
                               <span
                                 className="text-[10px] font-semibold"
-                                style={{ color: bajo ? "#FFB020" : "rgba(0,214,143,0.7)" }}
+                                style={{ color: bajo ? "#F59E0B" : "rgba(16,185,129,0.7)" }}
                               >
                                 Stock: {item.stock_actual}
                               </span>
                             </div>
                           </div>
-                          <span className="text-sm font-bold ml-3 shrink-0" style={{ color: "#1A6BFF" }}>
+                          <span className="text-sm font-bold ml-3 shrink-0" style={{ color: "#67BAF4" }}>
                             {formatCLP(item.precio_unitario)}
                           </span>
                         </button>
@@ -421,12 +420,12 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                     type="number"
                     value={newPrecio}
                     onChange={e => setNewPrecio(e.target.value)}
-                    style={selectedInvId ? { borderColor: "rgba(26,107,255,0.3)" } : {}}
+                    style={selectedInvId ? { borderColor: "rgba(103,186,244,0.3)" } : {}}
                   />
                   {selectedInvId && newPrecio && (
                     <span
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px]"
-                      style={{ color: "rgba(26,107,255,0.6)" }}
+                      style={{ color: "#67BAF4" }}
                     >
                       precargado
                     </span>
@@ -438,9 +437,9 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
               {newPrecio && newCant && (
                 <div
                   className="rounded-lg px-3 py-2 flex justify-between text-xs"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}
+                  style={{ background: "#111827", border: "1px solid #1a2a3a" }}
                 >
-                  <span style={{ color: "rgba(255,255,255,0.4)" }}>Subtotal:</span>
+                  <span style={{ color: "#555555" }}>Subtotal:</span>
                   <span className="font-bold text-white">
                     {formatCLP(parseFloat(newCant) * parseInt(newPrecio))}
                   </span>
@@ -451,15 +450,15 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
                 <button
                   onClick={() => { setAddingItem(false); setNewDesc(""); setNewPrecio(""); setSelectedInvId(null); }}
                   className="flex-1 py-2.5 rounded-xl text-sm font-semibold"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.55)" }}
+                  style={{ background: "#111827", border: "1px solid #1a2a3a", color: "#555555" }}
                 >
                   Cancelar
                 </button>
                 <button
                   onClick={addItem}
                   disabled={!newDesc || !newPrecio}
-                  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white disabled:opacity-40"
-                  style={{ background: "linear-gradient(135deg, #1A6BFF 0%, #0052e0 100%)" }}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold disabled:opacity-40"
+                  style={{ background: "#1E466B", color: "#67BAF4" }}
                 >
                   Agregar
                 </button>
@@ -469,14 +468,14 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
 
           {/* Totales */}
           {items.length > 0 && (
-            <div className="mt-3 pt-3 space-y-1.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-              <div className="flex justify-between text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <div className="mt-3 pt-3 space-y-1.5" style={{ borderTop: "1px solid #1a2a3a" }}>
+              <div className="flex justify-between text-sm" style={{ color: "#555555" }}>
                 <span>Neto</span><span>{formatCLP(ot.monto_neto)}</span>
               </div>
-              <div className="flex justify-between text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+              <div className="flex justify-between text-sm" style={{ color: "#555555" }}>
                 <span>IVA (19%)</span><span>{formatCLP(ot.monto_iva)}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-white pt-1" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <div className="flex justify-between text-base font-bold text-white pt-1" style={{ borderTop: "1px solid #1a2a3a" }}>
                 <span>Total</span><span>{formatCLP(ot.monto_total)}</span>
               </div>
             </div>
@@ -521,7 +520,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
             onClick={() => cambiarEstado("cerrado")}
             disabled={loading}
             className="w-full py-3.5 rounded-xl font-bold text-white text-sm active:scale-[0.98] transition-transform disabled:opacity-50"
-            style={{ background: "rgba(255,71,87,0.15)", border: "1px solid rgba(255,71,87,0.25)", color: "#FF4757" }}
+            style={{ background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.25)", color: "#EF4444" }}
           >
             Cerrar OT
           </button>
@@ -534,7 +533,7 @@ export default function OTDetailClient({ ot: initialOt, taller }: { ot: OrdenTra
 function InfoRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <p className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>{label}</p>
+      <p className="text-xs" style={{ color: "#555555" }}>{label}</p>
       <p className={`text-sm text-white font-medium ${mono ? "font-mono" : ""}`}>{value}</p>
     </div>
   );

@@ -25,7 +25,7 @@ export default function FotoGrid({ fotos, onDelete }: { fotos: FotoOT[]; onDelet
                 className="absolute top-2 right-2 w-7 h-7 rounded-lg bg-bg/80 flex items-center justify-center opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity"
               >
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M2 2l10 10M12 2L2 12" stroke="#FF4757" strokeWidth="2" strokeLinecap="round"/>
+                  <path d="M2 2l10 10M12 2L2 12" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </button>
             )}

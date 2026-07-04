@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { Search, X } from "lucide-react";
 
 interface Vehiculo {
   id: string;
@@ -33,24 +34,20 @@ export default function PatentesClient({ vehiculos }: { vehiculos: Vehiculo[] })
       {/* ── BUSCADOR ── */}
       <div
         className="flex items-center gap-2 rounded-xl px-3 py-2.5"
-        style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+        style={{ background: "#111827", border: "1px solid #1a2a3a" }}
       >
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="6" cy="6" r="4.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" />
-          <path d="M9.5 9.5l2.5 2.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" strokeLinecap="round" />
-        </svg>
+        <Search size={14} color="#555555" strokeWidth={1.8} />
         <input
-          className="flex-1 bg-transparent text-sm text-white placeholder-white/20 outline-none"
+          className="flex-1 bg-transparent text-sm outline-none"
+          style={{ color: "#FAFAFA" }}
           placeholder="Buscar por patente, marca, cliente…"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           autoCapitalize="characters"
         />
         {search && (
-          <button onClick={() => setSearch("")} className="text-white/30 hover:text-white/60">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M2 2l8 8M10 2L2 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
+          <button onClick={() => setSearch("")} style={{ color: "#555555" }}>
+            <X size={12} strokeWidth={1.8} />
           </button>
         )}
       </div>

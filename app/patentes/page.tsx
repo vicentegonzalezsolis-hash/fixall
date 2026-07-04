@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
-import Logo from "@/components/Logo";
+import AppHeader from "@/components/AppHeader";
 import PatentesClient from "./PatentesClient";
 
 export default async function PatentesPage() {
@@ -10,7 +10,7 @@ export default async function PatentesPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: taller } = await supabase.from("talleres").select("id").eq("user_id", user.id).single();
+  const { data: taller } = await supabase.from("talleres").select("id, nombre").eq("user_id", user.id).single();
   if (!taller) redirect("/perfil");
 
   const { data: vehiculos } = await supabase
@@ -20,11 +20,11 @@ export default async function PatentesPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <div className="pb-28 min-h-screen" style={{ background: "#0B0D14" }}>
-      <div className="px-4 pt-12 pb-4">
-        <Logo size="sm" className="mb-3" />
+    <div className="pb-28 min-h-screen" style={{ background: "#0D0D0D" }}>
+      <AppHeader tallerNombre={taller.nombre} />
+      <div className="px-4 pt-3 pb-4">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-xl font-extrabold text-white">Vehículos</h1>
+          <h1 className="text-xl font-extrabold" style={{ color: "#FAFAFA" }}>Vehículos</h1>
           <Link href="/patentes/nueva" className="btn-primary text-sm px-4 py-2">+ Nuevo</Link>
         </div>
       </div>

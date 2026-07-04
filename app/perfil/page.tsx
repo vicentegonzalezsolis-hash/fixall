@@ -7,6 +7,7 @@ import Link from "next/link";
 import BottomNav from "@/components/BottomNav";
 import Logo from "@/components/Logo";
 import { Suspense } from "react";
+import { ChevronLeft } from "lucide-react";
 
 function PerfilForm() {
   const supabase = createClient();
@@ -69,7 +70,7 @@ function PerfilForm() {
     router.push("/login");
   }
 
-  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" /></div>;
 
   return (
     <div className="pb-24">
@@ -78,13 +79,11 @@ function PerfilForm() {
         <div className="flex items-center gap-3">
           {!isSetup && (
             <Link href="/dashboard" className="w-9 h-9 rounded-xl bg-surface-2 flex items-center justify-center border border-border shrink-0">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M11 4L6 9l5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+              <ChevronLeft size={18} color="#FAFAFA" strokeWidth={1.8} />
             </Link>
           )}
             <div>
-              <h1 className="text-lg font-bold">{isSetup ? "Configura tu taller" : "Perfil del taller"}</h1>
+              <h1 className="text-lg font-bold" style={{ color: "#FAFAFA" }}>{isSetup ? "Configura tu taller" : "Perfil del taller"}</h1>
               {isSetup && <p className="text-xs text-text-muted">Completa los datos para continuar</p>}
             </div>
           </div>

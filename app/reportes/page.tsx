@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
 import GraficoBarras from "./GraficoBarras";
-import Logo from "@/components/Logo";
+import AppHeader from "@/components/AppHeader";
 
 function formatCLPShort(n: number) {
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -98,23 +98,23 @@ export default async function ReportesPage() {
       : null;
 
   const estadosChart = [
-    { label: "Pendiente",     count: mesActualRows.filter((o) => o.estado === "pendiente").length,          color: "#FFB020" },
-    { label: "En proceso",    count: mesActualRows.filter((o) => o.estado === "en_proceso").length,         color: "#1A6BFF" },
-    { label: "Esp. repuesto", count: mesActualRows.filter((o) => o.estado === "esperando_repuesto").length, color: "#FF8C00" },
-    { label: "Listo",         count: mesActualRows.filter((o) => o.estado === "listo").length,              color: "#00D68F" },
-    { label: "Cerrado",       count: cerradas,                                                               color: "rgba(255,255,255,0.2)" },
+    { label: "Pendiente",     count: mesActualRows.filter((o) => o.estado === "pendiente").length,          color: "#67BAF4" },
+    { label: "En proceso",    count: mesActualRows.filter((o) => o.estado === "en_proceso").length,         color: "#F59E0B" },
+    { label: "Esp. repuesto", count: mesActualRows.filter((o) => o.estado === "esperando_repuesto").length, color: "#F59E0B" },
+    { label: "Listo",         count: mesActualRows.filter((o) => o.estado === "listo").length,              color: "#10B981" },
+    { label: "Cerrado",       count: cerradas,                                                               color: "#555555" },
   ];
 
   const mesNombre = MESES[now.getMonth()];
   const mesPrevNombre = MESES[now.getMonth() === 0 ? 11 : now.getMonth() - 1];
 
   return (
-    <div className="pb-28 min-h-screen" style={{ background: "#0B0D14" }}>
+    <div className="pb-28 min-h-screen" style={{ background: "#0D0D0D" }}>
+      <AppHeader tallerNombre={taller.nombre} />
       {/* Header */}
-      <div className="px-4 pt-12 pb-5">
-        <Logo size="sm" className="mb-3" />
-        <h1 className="text-xl font-extrabold text-white">Reportes</h1>
-        <p className="text-sm mt-0.5" style={{ color: "rgba(255,255,255,0.38)" }}>
+      <div className="px-4 pt-3 pb-5">
+        <h1 className="text-xl font-extrabold" style={{ color: "#FAFAFA" }}>Reportes</h1>
+        <p className="text-sm mt-0.5" style={{ color: "#555555" }}>
           {mesNombre} {now.getFullYear()}
         </p>
       </div>
@@ -123,53 +123,41 @@ export default async function ReportesPage() {
 
         {/* ── INGRESOS MES ── */}
         <div
-          className="rounded-2xl p-5 relative overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, rgba(26,107,255,0.15) 0%, rgba(26,107,255,0.04) 100%)",
-            border: "1px solid rgba(26,107,255,0.18)",
-          }}
+          className="rounded-2xl p-5"
+          style={{ background: "#1E466B" }}
         >
-          <div
-            className="pointer-events-none absolute -right-8 -top-8 w-36 h-36 rounded-full"
-            style={{ background: "radial-gradient(circle, rgba(26,107,255,0.12) 0%, transparent 70%)" }}
-          />
-          <div className="relative z-10">
-            <p
-              className="text-xs font-semibold uppercase tracking-widest mb-2"
-              style={{ color: "rgba(255,255,255,0.4)" }}
-            >
-              Ingresos del mes
-            </p>
-            <p className="text-3xl font-extrabold text-white tabular-nums leading-none">
-              {formatCLP(ingresosMes)}
-            </p>
-            {crecimiento !== null && (
-              <div className="flex items-center gap-1.5 mt-2">
-                <span
-                  className="text-sm font-bold"
-                  style={{ color: crecimiento >= 0 ? "#00D68F" : "#FF4757" }}
-                >
-                  {crecimiento >= 0 ? "↑" : "↓"} {Math.abs(crecimiento)}%
-                </span>
-                <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                  vs {mesPrevNombre} ({formatCLPShort(ingresosPasado)})
-                </span>
-              </div>
-            )}
-          </div>
+          <p
+            className="text-xs font-semibold uppercase tracking-widest mb-2"
+            style={{ color: "#67BAF4" }}
+          >
+            Ingresos del mes
+          </p>
+          <p className="text-3xl font-extrabold tabular-nums leading-none" style={{ color: "#FAFAFA" }}>
+            {formatCLP(ingresosMes)}
+          </p>
+          {crecimiento !== null && (
+            <div className="flex items-center gap-1.5 mt-2">
+              <span
+                className="text-sm font-bold"
+                style={{ color: crecimiento >= 0 ? "#10B981" : "#EF4444" }}
+              >
+                {crecimiento >= 0 ? "↑" : "↓"} {Math.abs(crecimiento)}%
+              </span>
+              <span className="text-xs" style={{ color: "rgba(103,186,244,0.7)" }}>
+                vs {mesPrevNombre} ({formatCLPShort(ingresosPasado)})
+              </span>
+            </div>
+          )}
         </div>
 
         {/* ── GRÁFICO 6 MESES ── */}
         <div
           className="rounded-2xl p-5"
-          style={{
-            background: "linear-gradient(145deg, rgba(26,29,46,0.9) 0%, rgba(18,20,31,0.95) 100%)",
-            border: "1px solid rgba(255,255,255,0.07)",
-          }}
+          style={{ background: "#111827", border: "1px solid #1a2a3a" }}
         >
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-4"
-            style={{ color: "rgba(255,255,255,0.4)" }}
+            style={{ color: "#555555" }}
           >
             Ingresos — últimos 6 meses
           </p>
@@ -179,20 +167,17 @@ export default async function ReportesPage() {
         {/* ── MINI STATS ── */}
         <div className="grid grid-cols-2 gap-2.5">
           {[
-            { label: "OTs del mes",      value: mesActualRows.length, color: "#1A6BFF", fmt: "num" },
-            { label: "Ticket promedio",  value: ticketPromedio,       color: "#fff",    fmt: "clp" },
-            { label: "Aprobadas online", value: aprobadas,            color: "#00D68F", fmt: "num" },
-            { label: "Cerradas",         value: cerradas,             color: "rgba(255,255,255,0.4)", fmt: "num" },
+            { label: "OTs del mes",      value: mesActualRows.length, color: "#67BAF4", fmt: "num" },
+            { label: "Ticket promedio",  value: ticketPromedio,       color: "#FAFAFA", fmt: "clp" },
+            { label: "Aprobadas online", value: aprobadas,            color: "#10B981", fmt: "num" },
+            { label: "Cerradas",         value: cerradas,             color: "#555555", fmt: "num" },
           ].map((s) => (
             <div
               key={s.label}
               className="rounded-2xl p-4"
-              style={{
-                background: "linear-gradient(145deg, rgba(26,29,46,0.85) 0%, rgba(18,20,31,0.9) 100%)",
-                border: "1px solid rgba(255,255,255,0.06)",
-              }}
+              style={{ background: "#111827", border: "1px solid #1a2a3a" }}
             >
-              <p className="text-xs mb-1.5" style={{ color: "rgba(255,255,255,0.38)" }}>
+              <p className="text-xs mb-1.5" style={{ color: "#555555" }}>
                 {s.label}
               </p>
               <p
@@ -208,14 +193,11 @@ export default async function ReportesPage() {
         {/* ── DISTRIBUCIÓN ESTADOS ── */}
         <div
           className="rounded-2xl p-5"
-          style={{
-            background: "linear-gradient(145deg, rgba(26,29,46,0.9) 0%, rgba(18,20,31,0.95) 100%)",
-            border: "1px solid rgba(255,255,255,0.07)",
-          }}
+          style={{ background: "#111827", border: "1px solid #1a2a3a" }}
         >
           <p
             className="text-xs font-semibold uppercase tracking-widest mb-4"
-            style={{ color: "rgba(255,255,255,0.4)" }}
+            style={{ color: "#555555" }}
           >
             Distribución por estado
           </p>
@@ -223,14 +205,14 @@ export default async function ReportesPage() {
             {estadosChart.map((row) => (
               <div key={row.label}>
                 <div className="flex justify-between text-xs mb-1.5">
-                  <span style={{ color: "rgba(255,255,255,0.55)" }}>{row.label}</span>
+                  <span style={{ color: "#555555" }}>{row.label}</span>
                   <span className="font-bold" style={{ color: row.color }}>
                     {row.count}
                   </span>
                 </div>
                 <div
                   className="h-1.5 rounded-full overflow-hidden"
-                  style={{ background: "rgba(255,255,255,0.05)" }}
+                  style={{ background: "#1a2a3a" }}
                 >
                   <div
                     className="h-1.5 rounded-full transition-all"

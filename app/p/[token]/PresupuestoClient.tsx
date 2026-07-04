@@ -68,8 +68,8 @@ export default function PresupuestoClient({ ot: initialOt, taller }: Props) {
         <div className="flex items-center gap-3 mb-1">
           <div className="w-10 h-10 rounded-xl bg-primary-dim flex items-center justify-center">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M4 10C4 6.686 6.686 4 10 4s6 2.686 6 6-2.686 6-6 6S4 13.314 4 10z" stroke="#1A6BFF" strokeWidth="1.5"/>
-              <path d="M8 10l1.5 1.5 3-3" stroke="#1A6BFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 10C4 6.686 6.686 4 10 4s6 2.686 6 6-2.686 6-6 6S4 13.314 4 10z" stroke="#67BAF4" strokeWidth="1.5"/>
+              <path d="M8 10l1.5 1.5 3-3" stroke="#67BAF4" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
           <div>
@@ -157,7 +157,7 @@ export default function PresupuestoClient({ ot: initialOt, taller }: Props) {
         <div className="bg-success-dim border border-success/20 rounded-2xl px-4 py-3">
           <div className="flex items-center gap-2">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="#00D68F" strokeWidth="1.3" strokeLinejoin="round"/>
+              <path d="M8 2l1.5 3 3.5.5-2.5 2.5.5 3.5L8 10l-3 1.5.5-3.5L3 5.5 6.5 5z" stroke="#10B981" strokeWidth="1.3" strokeLinejoin="round"/>
             </svg>
             <span className="text-success text-sm font-semibold">Garantía incluida</span>
           </div>
@@ -169,7 +169,7 @@ export default function PresupuestoClient({ ot: initialOt, taller }: Props) {
           <div className="card text-center py-6">
             <div className="w-14 h-14 rounded-full bg-success-dim flex items-center justify-center mx-auto mb-3">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-                <path d="M8 14l4 4 8-8" stroke="#00D68F" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M8 14l4 4 8-8" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
             <h2 className="font-bold text-lg text-white mb-1">¡Presupuesto aprobado!</h2>

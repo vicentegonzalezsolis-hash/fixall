@@ -1,8 +1,8 @@
 import { EstadoOT } from "@/types/database";
 
 const ESTADO_CONFIG: Record<EstadoOT, { label: string; color: string; bg: string }> = {
-  pendiente:          { label: "Pendiente",          color: "text-warning",  bg: "bg-warning-dim" },
-  en_proceso:         { label: "En proceso",         color: "text-primary",  bg: "bg-primary-dim" },
+  pendiente:          { label: "Activa",             color: "text-accent",   bg: "bg-accent-dim" },
+  en_proceso:         { label: "En proceso",         color: "text-warning",  bg: "bg-warning-dim" },
   esperando_repuesto: { label: "Esp. repuesto",      color: "text-warning",  bg: "bg-warning-dim" },
   listo:              { label: "Listo",              color: "text-success",  bg: "bg-success-dim" },
   cerrado:            { label: "Cerrado",            color: "text-text-secondary", bg: "bg-surface-2" },

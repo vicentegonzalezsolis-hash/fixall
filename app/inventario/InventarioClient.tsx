@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Inventario } from "@/types/database";
+import { Search, X, Plus, AlertTriangle, ChevronDown, Boxes } from "lucide-react";
 
 function formatCLP(n: number) {
   return new Intl.NumberFormat("es-CL", {
@@ -98,30 +99,27 @@ export default function InventarioClient({
           onClick={() => setFilterBajo((v) => !v)}
           className="w-full rounded-2xl px-4 py-3 flex items-center justify-between text-left active:scale-[0.99] transition-transform"
           style={{
-            background: filterBajo ? "rgba(255,176,32,0.12)" : "rgba(255,176,32,0.07)",
-            border: `1px solid ${filterBajo ? "rgba(255,176,32,0.3)" : "rgba(255,176,32,0.18)"}`,
+            background: filterBajo ? "rgba(245,158,11,0.15)" : "#111827",
+            border: "1px solid #1a2a3a",
           }}
         >
           <div className="flex items-center gap-2.5">
-            <span className="text-base">⚠️</span>
+            <AlertTriangle size={16} color="#F59E0B" />
             <div>
-              <p className="text-sm font-semibold" style={{ color: "#FFB020" }}>
+              <p className="text-sm font-semibold" style={{ color: "#F59E0B" }}>
                 {bajosStock.length} ítem{bajosStock.length !== 1 ? "s" : ""} con stock bajo
               </p>
-              <p className="text-xs" style={{ color: "rgba(255,176,32,0.55)" }}>
+              <p className="text-xs" style={{ color: "#555555" }}>
                 {filterBajo ? "Mostrando solo alertas" : "Toca para filtrar"}
               </p>
             </div>
           </div>
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
+          <ChevronDown
+            size={16}
+            color="#F59E0B"
+            strokeWidth={1.8}
             style={{ transform: filterBajo ? "rotate(180deg)" : "none", transition: "transform .2s" }}
-          >
-            <path d="M4 6l4 4 4-4" stroke="#FFB020" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          />
         </button>
       )}
 
@@ -129,37 +127,28 @@ export default function InventarioClient({
       <div className="flex gap-2">
         <div
           className="flex-1 flex items-center gap-2 rounded-xl px-3 py-2.5"
-          style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+          style={{ background: "#111827", border: "1px solid #1a2a3a" }}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <circle cx="6" cy="6" r="4.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" />
-            <path d="M9.5 9.5l2.5 2.5" stroke="rgba(255,255,255,0.3)" strokeWidth="1.3" strokeLinecap="round" />
-          </svg>
+          <Search size={14} color="#555555" strokeWidth={1.8} />
           <input
-            className="flex-1 bg-transparent text-sm text-white placeholder-white/20 outline-none"
+            className="flex-1 bg-transparent text-sm outline-none"
+            style={{ color: "#FAFAFA" }}
             placeholder="Buscar nombre, código…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
           {search && (
-            <button onClick={() => setSearch("")} className="text-white/30 hover:text-white/60">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 2l8 8M10 2L2 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
+            <button onClick={() => setSearch("")} style={{ color: "#555555" }}>
+              <X size={12} strokeWidth={1.8} />
             </button>
           )}
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold text-white"
-          style={{
-            background: "linear-gradient(135deg, #1A6BFF 0%, #0052e0 100%)",
-            boxShadow: "0 4px 16px rgba(26,107,255,0.3)",
-          }}
+          className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-bold"
+          style={{ background: "#1E466B", color: "#67BAF4" }}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M7 2v10M2 7h10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-          </svg>
+          <Plus size={14} strokeWidth={2} />
           Agregar
         </button>
       </div>
@@ -168,18 +157,12 @@ export default function InventarioClient({
       {showForm && (
         <div
           className="rounded-2xl p-5 space-y-4"
-          style={{
-            background: "linear-gradient(145deg, rgba(26,29,46,0.95) 0%, rgba(18,20,31,0.98) 100%)",
-            border: "1px solid rgba(26,107,255,0.2)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-          }}
+          style={{ background: "#111827", border: "1px solid #1a2a3a" }}
         >
           <div className="flex items-center justify-between">
-            <p className="text-sm font-bold text-white">Nuevo ítem de inventario</p>
-            <button onClick={() => setShowForm(false)} style={{ color: "rgba(255,255,255,0.3)" }}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
+            <p className="text-sm font-bold" style={{ color: "#FAFAFA" }}>Nuevo ítem de inventario</p>
+            <button onClick={() => setShowForm(false)} style={{ color: "#555555" }}>
+              <X size={16} strokeWidth={1.8} />
             </button>
           </div>
 
@@ -261,18 +244,15 @@ export default function InventarioClient({
             <button
               onClick={() => setShowForm(false)}
               className="flex-1 py-3 rounded-xl text-sm font-semibold"
-              style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.08)" }}
+              style={{ background: "#111827", color: "#555555", border: "1px solid #1a2a3a" }}
             >
               Cancelar
             </button>
             <button
               onClick={addItem}
               disabled={!form.nombre || saving}
-              className="flex-1 py-3 rounded-xl text-sm font-bold text-white disabled:opacity-50"
-              style={{
-                background: "linear-gradient(135deg, #1A6BFF 0%, #0052e0 100%)",
-                boxShadow: "0 4px 16px rgba(26,107,255,0.25)",
-              }}
+              className="flex-1 py-3 rounded-xl text-sm font-bold disabled:opacity-50"
+              style={{ background: "#1E466B", color: "#67BAF4" }}
             >
               {saving ? "Guardando…" : "Guardar ítem"}
             </button>
@@ -284,21 +264,18 @@ export default function InventarioClient({
       {visible.length === 0 && !showForm && (
         <div
           className="rounded-2xl p-10 flex flex-col items-center text-center"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.07)" }}
+          style={{ background: "#111827", border: "1px dashed #1a2a3a" }}
         >
           <div
             className="w-12 h-12 rounded-xl flex items-center justify-center mb-3"
-            style={{ background: "rgba(26,107,255,0.08)", border: "1px solid rgba(26,107,255,0.12)" }}
+            style={{ background: "#1E466B", border: "1px solid #67BAF4" }}
           >
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-              <rect x="2" y="4" width="18" height="14" rx="3" stroke="#1A6BFF" strokeWidth="1.4"/>
-              <path d="M7 9h8M7 13h5" stroke="#1A6BFF" strokeWidth="1.4" strokeLinecap="round"/>
-            </svg>
+            <Boxes size={22} color="#67BAF4" strokeWidth={1.4} />
           </div>
-          <p className="text-sm font-semibold text-white mb-1">
+          <p className="text-sm font-semibold mb-1" style={{ color: "#FAFAFA" }}>
             {search || filterBajo ? "Sin resultados" : "Inventario vacío"}
           </p>
-          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <p className="text-xs" style={{ color: "#555555" }}>
             {search || filterBajo ? "Prueba con otro filtro" : "Agrega tu primer ítem de repuesto"}
           </p>
         </div>
@@ -332,38 +309,35 @@ function InventarioItem({
   onDecrement: () => void;
   onDelete: () => void;
 }) {
-  const bajo = item.stock_actual <= item.stock_minimo;
+  const critico = item.stock_actual <= 0;
+  const bajo = !critico && item.stock_actual <= item.stock_minimo;
   const pct = item.stock_minimo > 0
     ? Math.min(100, Math.round((item.stock_actual / (item.stock_minimo * 2)) * 100))
     : 100;
 
-  const barColor = bajo ? "#FFB020" : item.stock_actual >= item.stock_minimo * 1.5 ? "#00D68F" : "#1A6BFF";
+  const barColor = critico ? "#EF4444" : bajo ? "#F59E0B" : "#10B981";
 
   return (
     <div
-      className="rounded-2xl p-4 relative overflow-hidden"
-      style={{
-        background: "linear-gradient(145deg, rgba(26,29,46,0.85) 0%, rgba(18,20,31,0.9) 100%)",
-        border: `1px solid ${bajo ? "rgba(255,176,32,0.2)" : "rgba(255,255,255,0.06)"}`,
-        boxShadow: bajo ? "0 0 0 1px rgba(255,176,32,0.08) inset" : "none",
-      }}
+      className="rounded-2xl p-4"
+      style={{ background: "#111827", border: "1px solid #1a2a3a" }}
     >
       {/* Header row */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0 pr-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-bold text-white leading-tight">{item.nombre}</p>
+            <p className="text-sm font-bold leading-tight" style={{ color: "#FAFAFA" }}>{item.nombre}</p>
             {item.categoria && (
               <span
                 className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md"
-                style={{ background: "rgba(26,107,255,0.12)", color: "rgba(26,107,255,0.8)" }}
+                style={{ background: "rgba(103,186,244,0.12)", color: "#67BAF4" }}
               >
                 {item.categoria}
               </span>
             )}
           </div>
           {item.codigo_ref && (
-            <p className="text-[11px] mt-0.5 font-mono" style={{ color: "rgba(255,255,255,0.3)" }}>
+            <p className="text-[11px] mt-0.5 font-mono" style={{ color: "#555555" }}>
               {item.codigo_ref}
             </p>
           )}
@@ -371,9 +345,9 @@ function InventarioItem({
         <button
           onClick={onDelete}
           className="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
-          style={{ color: "rgba(255,255,255,0.2)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#FF4757")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.2)")}
+          style={{ color: "#555555" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#EF4444")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#555555")}
         >
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
             <path d="M1.5 3h9M4.5 3V2a1 1 0 012 0v1M3 3l.5 7h5L9 3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
@@ -384,16 +358,16 @@ function InventarioItem({
       {/* Barra de stock */}
       <div className="mb-3">
         <div className="flex justify-between items-center mb-1">
-          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <span className="text-[10px] font-semibold uppercase tracking-wider" style={{ color: "#555555" }}>
             Stock
           </span>
-          {bajo && (
-            <span className="text-[10px] font-bold" style={{ color: "#FFB020" }}>
-              ⚠ Bajo mínimo ({item.stock_minimo})
+          {(bajo || critico) && (
+            <span className="text-[10px] font-bold" style={{ color: barColor }}>
+              ⚠ {critico ? "Sin stock" : `Bajo mínimo (${item.stock_minimo})`}
             </span>
           )}
         </div>
-        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+        <div className="h-1.5 rounded-full overflow-hidden" style={{ background: "#1a2a3a" }}>
           <div
             className="h-1.5 rounded-full transition-all duration-300"
             style={{ width: `${pct}%`, background: barColor }}
@@ -406,26 +380,26 @@ function InventarioItem({
         {/* Stepper */}
         <div
           className="flex items-center gap-0 rounded-xl overflow-hidden"
-          style={{ border: "1px solid rgba(255,255,255,0.08)", background: "rgba(255,255,255,0.03)" }}
+          style={{ border: "1px solid #1a2a3a", background: "#0D0D0D" }}
         >
           <button
             onClick={onDecrement}
             disabled={item.stock_actual <= 0}
             className="w-9 h-9 flex items-center justify-center text-lg font-light transition-colors disabled:opacity-30"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "#FAFAFA" }}
           >
             −
           </button>
           <span
             className="w-10 text-center text-base font-bold"
-            style={{ color: bajo ? "#FFB020" : "#fff" }}
+            style={{ color: barColor }}
           >
             {item.stock_actual}
           </span>
           <button
             onClick={onIncrement}
             className="w-9 h-9 flex items-center justify-center text-lg font-light transition-colors"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "#FAFAFA" }}
           >
             +
           </button>
@@ -434,10 +408,10 @@ function InventarioItem({
         {/* Precio y proveedor */}
         <div className="text-right">
           {item.precio_unitario > 0 && (
-            <p className="text-sm font-bold text-white">{formatCLP(item.precio_unitario)}</p>
+            <p className="text-sm font-bold" style={{ color: "#FAFAFA" }}>{formatCLP(item.precio_unitario)}</p>
           )}
           {item.proveedor && (
-            <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+            <p className="text-[10px]" style={{ color: "#555555" }}>
               {item.proveedor}
             </p>
           )}

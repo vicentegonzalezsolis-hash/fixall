@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { ChevronLeft } from "lucide-react";
 import EstadoBadge from "@/components/EstadoBadge";
 import { OrdenTrabajo } from "@/types/database";
 
@@ -40,11 +41,9 @@ export default async function PatenteDetailPage({
     <div className="pb-10">
       <div className="flex items-center gap-3 px-4 pt-12 pb-4">
         <Link href="/patentes" className="w-9 h-9 rounded-xl bg-surface-2 flex items-center justify-center border border-border">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M11 4L6 9l5 5" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
+          <ChevronLeft size={18} color="#FAFAFA" strokeWidth={1.8} />
         </Link>
-        <h1 className="text-xl font-bold font-mono">{v.patente}</h1>
+        <h1 className="text-xl font-bold font-mono" style={{ color: "#FAFAFA" }}>{v.patente}</h1>
       </div>
 
       <div className="px-4 space-y-4">

@@ -43,18 +43,18 @@ export default function GraficoBarras({ data }: Props) {
         <defs>
           {/* Gradiente barras normales */}
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="rgba(26,107,255,0.55)" />
-            <stop offset="100%" stopColor="rgba(26,107,255,0.1)" />
+            <stop offset="0%" stopColor="#1E466B" />
+            <stop offset="100%" stopColor="rgba(30,70,107,0.3)" />
           </linearGradient>
           {/* Gradiente barra activa / mes actual */}
           <linearGradient id="barGradActive" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1A6BFF" />
-            <stop offset="100%" stopColor="rgba(26,107,255,0.3)" />
+            <stop offset="0%" stopColor="#67BAF4" />
+            <stop offset="100%" stopColor="rgba(103,186,244,0.3)" />
           </linearGradient>
           {/* Gradiente barra hover */}
           <linearGradient id="barGradHover" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#4d8fff" />
-            <stop offset="100%" stopColor="rgba(77,143,255,0.3)" />
+            <stop offset="0%" stopColor="#8ecdf7" />
+            <stop offset="100%" stopColor="rgba(142,205,247,0.3)" />
           </linearGradient>
           <clipPath id="barClip">
             <rect x="0" y="0" width={VB_W} height={CHART_H} />
@@ -71,7 +71,7 @@ export default function GraficoBarras({ data }: Props) {
               y1={y}
               x2={VB_W}
               y2={y}
-              stroke="rgba(255,255,255,0.04)"
+              stroke="#1a2a3a"
               strokeWidth="1"
               strokeDasharray="4 4"
             />
@@ -128,7 +128,7 @@ export default function GraficoBarras({ data }: Props) {
                     width={barW}
                     height={3}
                     rx={1.5}
-                    fill="rgba(255,255,255,0.06)"
+                    fill="#1a2a3a"
                     pointerEvents="none"
                   />
                 )}
@@ -141,7 +141,7 @@ export default function GraficoBarras({ data }: Props) {
                       width={48}
                       height={16}
                       rx={4}
-                      fill="rgba(26,107,255,0.9)"
+                      fill="rgba(103,186,244,0.9)"
                       pointerEvents="none"
                     />
                     <text
@@ -177,10 +177,10 @@ export default function GraficoBarras({ data }: Props) {
                 fontSize: 10,
                 fontWeight: isCurrent ? 700 : 500,
                 color: isActive
-                  ? "#fff"
+                  ? "#FAFAFA"
                   : isCurrent
-                  ? "#1A6BFF"
-                  : "rgba(255,255,255,0.3)",
+                  ? "#67BAF4"
+                  : "#555555",
                 transition: "color 0.15s",
               }}
             >
@@ -191,26 +191,26 @@ export default function GraficoBarras({ data }: Props) {
       </div>
 
       {/* Leyenda OTs / hover info */}
-      <div className="mt-3 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="mt-3 pt-3" style={{ borderTop: "1px solid #1a2a3a" }}>
         {active !== null ? (
           <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold text-white">
+            <span className="font-semibold" style={{ color: "#FAFAFA" }}>
               {data[active].label}
             </span>
             <div className="flex items-center gap-3">
-              <span style={{ color: "rgba(255,255,255,0.45)" }}>
+              <span style={{ color: "#555555" }}>
                 {data[active].ots} OT{data[active].ots !== 1 ? "s" : ""}
               </span>
-              <span className="font-bold" style={{ color: "#1A6BFF" }}>
+              <span className="font-bold" style={{ color: "#67BAF4" }}>
                 {data[active].ingresos > 0 ? formatCLPShort(data[active].ingresos) : "Sin ingresos"}
               </span>
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+          <div className="flex items-center gap-3 text-xs" style={{ color: "#555555" }}>
             <span
               className="inline-block w-2 h-2 rounded-sm"
-              style={{ background: "#1A6BFF", flexShrink: 0 }}
+              style={{ background: "#1E466B", flexShrink: 0 }}
             />
             <span>Ingresos por mes · Toca una barra para ver detalle</span>
           </div>

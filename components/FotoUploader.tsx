@@ -58,7 +58,7 @@ export default function FotoUploader({ otId, tipo, count, onUploaded }: Props) {
         type="button"
         onClick={() => ref.current?.click()}
         disabled={count >= max || uploading}
-        className="w-full border-2 border-dashed border-border rounded-xl py-4 flex flex-col items-center gap-2 text-text-muted hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-40"
+        className="w-full border-2 border-dashed border-border rounded-xl py-4 flex flex-col items-center gap-2 text-text-muted hover:border-accent/40 hover:text-accent transition-colors disabled:opacity-40"
       >
         {uploading ? (
           <span className="text-sm">Subiendo...</span>

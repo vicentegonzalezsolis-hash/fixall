@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Logo from "@/components/Logo";
+import { Mail, Check } from "lucide-react";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -30,11 +31,11 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div
           className="absolute -top-32 left-1/2 -translate-x-1/2 w-[340px] h-[340px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(26,107,255,0.16) 0%, transparent 68%)" }}
+          style={{ background: "radial-gradient(circle, rgba(103,186,244,0.16) 0%, transparent 68%)" }}
         />
         <div
           className="absolute bottom-0 right-0 w-[220px] h-[220px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(0,214,143,0.07) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)" }}
         />
       </div>
 
@@ -46,11 +47,11 @@ export default function LoginPage() {
 
           {/* Tagline con divider */}
           <div className="flex items-center gap-3">
-            <div className="h-px w-10" style={{ background: "rgba(255,255,255,0.1)" }} />
-            <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "rgba(255,255,255,0.35)" }}>
+            <div className="h-px w-10" style={{ background: "#1a2a3a" }} />
+            <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: "#555555" }}>
               Gestión de talleres
             </p>
-            <div className="h-px w-10" style={{ background: "rgba(255,255,255,0.1)" }} />
+            <div className="h-px w-10" style={{ background: "#1a2a3a" }} />
           </div>
         </div>
 
@@ -58,15 +59,14 @@ export default function LoginPage() {
         <div
           className="w-full rounded-3xl p-6"
           style={{
-            background: "linear-gradient(145deg, rgba(26,29,46,0.95) 0%, rgba(18,20,31,0.98) 100%)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 24px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+            background: "#111827",
+            border: "1px solid #1a2a3a",
           }}
         >
           {!sent ? (
             <>
-              <h2 className="text-xl font-bold text-white mb-1">Iniciar sesión</h2>
-              <p className="text-sm mb-6" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <h2 className="text-xl font-bold mb-1" style={{ color: "#FAFAFA" }}>Iniciar sesión</h2>
+              <p className="text-sm mb-6" style={{ color: "#555555" }}>
                 Te enviamos un link de acceso instantáneo a tu email
               </p>
 
@@ -74,24 +74,21 @@ export default function LoginPage() {
                 <div>
                   <label
                     className="block text-xs font-semibold mb-2 uppercase tracking-widest"
-                    style={{ color: "rgba(255,255,255,0.35)" }}
+                    style={{ color: "#555555" }}
                   >
                     Email del taller
                   </label>
                   <div
                     className="relative rounded-xl overflow-hidden"
-                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}
+                    style={{ background: "#111827", border: "1px solid #1a2a3a" }}
                   >
                     <div className="absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
-                        <rect x="1" y="3" width="13" height="9" rx="2" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2"/>
-                        <path d="M1 5.5l6.5 4 6.5-4" stroke="rgba(255,255,255,0.25)" strokeWidth="1.2"/>
-                      </svg>
+                      <Mail size={15} color="#555555" strokeWidth={1.4} />
                     </div>
                     <input
                       type="email"
-                      className="w-full bg-transparent pl-10 pr-4 py-3.5 text-sm text-white placeholder-white/20 outline-none"
-                      style={{ caretColor: "#1A6BFF" }}
+                      className="w-full bg-transparent pl-10 pr-4 py-3.5 text-sm outline-none"
+                      style={{ caretColor: "#67BAF4", color: "#FAFAFA" }}
                       placeholder="taller@ejemplo.cl"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -105,9 +102,9 @@ export default function LoginPage() {
                   <div
                     className="rounded-xl px-4 py-3 text-sm"
                     style={{
-                      background: "rgba(255,71,87,0.08)",
-                      border: "1px solid rgba(255,71,87,0.2)",
-                      color: "#FF4757",
+                      background: "rgba(239,68,68,0.08)",
+                      border: "1px solid rgba(239,68,68,0.2)",
+                      color: "#EF4444",
                     }}
                   >
                     {error}
@@ -117,18 +114,12 @@ export default function LoginPage() {
                 <button
                   type="submit"
                   disabled={loading || !email}
-                  className="w-full py-3.5 rounded-xl text-sm font-bold text-white active:scale-[0.98] transition-transform disabled:opacity-50"
-                  style={{
-                    background:
-                      !email || loading
-                        ? "rgba(26,107,255,0.35)"
-                        : "linear-gradient(135deg, #1A6BFF 0%, #0052e0 100%)",
-                    boxShadow: email && !loading ? "0 8px 24px rgba(26,107,255,0.3)" : "none",
-                  }}
+                  className="w-full py-3.5 rounded-xl text-sm font-bold active:scale-[0.98] transition-transform disabled:opacity-50"
+                  style={{ background: "#1E466B", color: "#67BAF4" }}
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span className="w-4 h-4 border-2 border-accent/30 border-t-accent rounded-full animate-spin" />
                       Enviando…
                     </span>
                   ) : (
@@ -141,36 +132,28 @@ export default function LoginPage() {
             <div className="text-center py-2">
               <div
                 className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
-                style={{ background: "rgba(0,214,143,0.08)", border: "1px solid rgba(0,214,143,0.2)" }}
+                style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}
               >
-                <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
-                  <path
-                    d="M7 15l5 5 11-10"
-                    stroke="#00D68F"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Check size={30} color="#10B981" strokeWidth={2.5} />
               </div>
-              <h2 className="text-xl font-bold text-white mb-2">Revisa tu email</h2>
-              <p className="text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>
+              <h2 className="text-xl font-bold mb-2" style={{ color: "#FAFAFA" }}>Revisa tu email</h2>
+              <p className="text-sm" style={{ color: "#555555" }}>
                 Enviamos el link de acceso a
               </p>
-              <p className="text-sm font-semibold text-white mt-0.5 mb-5">{email}</p>
+              <p className="text-sm font-semibold mt-0.5 mb-5" style={{ color: "#FAFAFA" }}>{email}</p>
               <div
                 className="rounded-xl px-4 py-3 text-xs text-left mb-5"
                 style={{
-                  background: "rgba(26,107,255,0.06)",
-                  border: "1px solid rgba(26,107,255,0.12)",
-                  color: "rgba(255,255,255,0.4)",
+                  background: "rgba(103,186,244,0.06)",
+                  border: "1px solid rgba(103,186,244,0.12)",
+                  color: "#555555",
                 }}
               >
                 El link expira en 1 hora · Revisa también tu carpeta de spam
               </div>
               <button
                 className="text-sm font-medium active:scale-95 transition-transform"
-                style={{ color: "rgba(255,255,255,0.35)" }}
+                style={{ color: "#555555" }}
                 onClick={() => setSent(false)}
               >
                 ← Usar otro email
@@ -190,14 +173,14 @@ export default function LoginPage() {
               key={f.label}
               className="rounded-2xl p-3 text-center"
               style={{
-                background: "rgba(255,255,255,0.025)",
-                border: "1px solid rgba(255,255,255,0.05)",
+                background: "#111827",
+                border: "1px solid #1a2a3a",
               }}
             >
               <p className="text-lg mb-1">{f.icon}</p>
               <p
                 className="text-[10px] font-semibold leading-tight"
-                style={{ color: "rgba(255,255,255,0.3)" }}
+                style={{ color: "#555555" }}
               >
                 {f.label}
               </p>
@@ -206,7 +189,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <p className="text-center text-[11px] pb-8 relative z-10" style={{ color: "rgba(255,255,255,0.18)" }}>
+      <p className="text-center text-[11px] pb-8 relative z-10" style={{ color: "#555555" }}>
         Solo para talleres registrados en Fixall
       </p>
     </div>
