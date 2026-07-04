@@ -1,11 +1,13 @@
 import Link from "next/link";
-import Logo from "./Logo";
 
 export default function AppHeader({ tallerNombre }: { tallerNombre: string }) {
   return (
     <div className="px-4 pt-12 pb-3">
       <div className="flex items-center justify-between">
-        <Logo size="sm" />
+        <p style={{ fontSize: 22, fontWeight: 800, lineHeight: 1 }}>
+          <span style={{ color: "#FAFAFA" }}>Fix</span>
+          <span style={{ color: "#67BAF4" }}>all</span>
+        </p>
         <Link
           href="/perfil"
           className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm shrink-0"
